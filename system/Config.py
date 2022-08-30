@@ -5,3 +5,6 @@ class Config:
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = "postgresql://postgres:arnab@localhost/medimyth"
     SQLALCHEMY_TRACK_MODIFICATIONS = True
+    TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
+    TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
+    # DEFAULT_NUMBER = "+91"
