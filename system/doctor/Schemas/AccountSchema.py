@@ -6,8 +6,10 @@ class AccountSchema(Schema):
     email = fields.Email(required=True)
     phone_number = fields.Str(required=True,validate=validate.Length(equal=10),data_key="phone number")
     referal_code = fields.Str(default=None,data_key="referal code")
+    reg_no = fields.Str(required=True,data_key="registration number")
     address = fields.Str(required=True)
     category = fields.Str(required=True)
+    password = fields.Str(required=True)
     profile_picture = fields.Raw(type="file",default=None,data_key="profile picture")
     
     @post_load

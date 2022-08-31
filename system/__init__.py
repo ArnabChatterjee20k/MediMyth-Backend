@@ -1,14 +1,17 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from system.Config import Config
 
 db = SQLAlchemy()
+migrate = Migrate()
 
 def create_api():
     app = Flask(__name__)
     app.config.from_object(Config)
     db.init_app(app)
-
+    migrate.init_app(app,db)
+    
     from system.otp import otp
     app.register_blueprint(otp,url_prefix="/otp")
 
