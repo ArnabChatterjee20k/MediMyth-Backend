@@ -18,11 +18,12 @@ def token_required(function):
                 data = verify_jwt(token)
             except Exception as e:
                 print(e)
-                
+
                 # if data is passed to kwargs from another function then we should accept that and also send that data
                 # token containing some data like email which may be also present in the kwargs
                 return make_response({"status":"invalid access token"},400)
-            data.update({"update":kwargs}) #update returns none
+            if(len(kwargs)):
+                data.update({"update":kwargs}) #update returns none
             return function(*args,**data)
         return make_response({"status":"access-token not found"},404)
     return inner
