@@ -3,7 +3,7 @@ from system.doctor.Schemas.AccountSchema import AccountSchema
 from marshmallow import ValidationError
 from functools import wraps
 
-def verify(function):
+def verify_login(function):
     @wraps(function)
     def inner(*args,**kwargs):
         data = request.args

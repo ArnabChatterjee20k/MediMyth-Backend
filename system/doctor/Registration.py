@@ -1,6 +1,6 @@
 from flask import jsonify , make_response
 from flask_restful import Resource
-from system.doctor.utils.VerifyRegister import verify
+from system.doctor.utils.VerifyRegister import verify_register
 from system.utils.otp_required import otp_required
 from system import db
 from system.Models.Doctor import Doctor
@@ -8,7 +8,7 @@ from sqlalchemy.exc import IntegrityError
 from system.utils.JWT import generate_jwt
 
 class Registration(Resource):
-    @verify
+    @verify_register
     # @otp_required
     def post(self,*args,**data):
         doctor = Doctor()

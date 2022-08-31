@@ -1,14 +1,13 @@
-from flask import request
-from system.utils.verifyOTP import check
 from system.doctor.Schemas.AccountSchema import AccountSchema
-from marshmallow import ValidationError
 from functools import wraps
+from flask import request
+from marshmallow import ValidationError
 
-def verify_register(function):
+def verify_update(function):
     @wraps(function)
     def inner(*args,**kwargs):
-        schema = AccountSchema()
         data = request.json
+        schema = AccountSchema(partial=True)
         try:
             result = schema.load(data)
             return function(*args,**result)

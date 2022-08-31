@@ -34,3 +34,4 @@ class Doctor(db.Model):
             return check_password_hash(doctor.password,password)
         except:
             raise ValueError
+        

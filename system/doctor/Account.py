@@ -1,10 +1,13 @@
+import email
 from flask_restful import Resource
 from flask import make_response
-from system.doctor.utils.VerifyLogin import verify
+from system.doctor.utils.VerifyLogin import verify_login
+from system.doctor.utils.VerifyUpdate import verify_update
 from system.Models.Doctor import Doctor
-from system.utils.JWT import generate_jwt
+from system.utils.JWT import generate_jwt , token_required
+from system import db
 class Account(Resource):
-    @verify
+    @verify_login
     def get(self,**data):
         email = data.get("email")
         password = data.get("password")
@@ -15,3 +18,23 @@ class Account(Resource):
             return make_response({"status":"Invalid Password"},400)
         except:
             return make_response({"status":"Email not found"},404)
+    
+    @verify_update
+    @token_required
+    def put(self,**data):
+        # since the incoming data is not fully required so we are implementing 
+        # updated data is in update key of data
+        update_data = data.get("update")
+        email = data.get("email")
+        if(len(data)):
+            # Doctor().update_data(data.get("email"),update_data)
+            doctor = Doctor.query.filter_by(email=email)
+            doctor.first_or_404() ## for checking the existance
+            doctor.update(update_data)
+            db.session.commit()
+            response = {"status":"updated"}
+            new_email = update_data.get("email")
+            if new_email:
+                response["token"] = generate_jwt({"email":new_email})            
+            return make_response(response,200) #to gene
+        return make_response({"status":"no data to update"},403)
