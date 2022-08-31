@@ -29,9 +29,6 @@ class Doctor(db.Model):
     
     @classmethod
     def check_password(cls,password,email):
-        try:
-            doctor = Doctor.query.filter_by(email=email).first()
-            return check_password_hash(doctor.password,password)
-        except:
-            raise ValueError
+        doctor = Doctor.query.filter_by(email=email).first_or_404()
+        return check_password_hash(doctor.password,password)
         
