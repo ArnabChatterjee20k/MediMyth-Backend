@@ -7,4 +7,4 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
     TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
-    # DEFAULT_NUMBER = "+91"
+    TWILIO_SERVICE_ID = os.environ.get("TWILIO_SERVICE_ID")
