@@ -38,3 +38,12 @@ class Account(Resource):
                 response["token"] = generate_jwt({"email":new_email})            
             return make_response(response,200) #to gene
         return make_response({"status":"no data to update"},403)
+    
+    @token_required
+    def delete(self,**data):
+        email = data.get("email")
+        doctor = Doctor.query.filter_by(email=email).first_or_404() # if doctor not found then 404
+        db.session.delete(doctor)
+        db.session.commit()
+
+        return make_response({"status":"deleted"},200)
