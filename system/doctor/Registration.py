@@ -7,7 +7,7 @@ from system.Models.Doctor import Doctor
 from sqlalchemy.exc import IntegrityError
 from system.utils.JWT import generate_jwt
 
-class Account(Resource):
+class Registration(Resource):
     @verify
     # @otp_required
     def post(self,*args,**data):
