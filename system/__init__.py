@@ -17,4 +17,6 @@ def create_api():
 
     from system.doctor import doctor
     app.register_blueprint(doctor,url_prefix="/doctor")
+
+    from system.Models.Schedule import Schedule
     return app
