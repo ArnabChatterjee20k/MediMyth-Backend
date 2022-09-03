@@ -16,7 +16,10 @@ def create_api():
     app.register_blueprint(otp,url_prefix="/otp")
 
     from system.doctor import doctor
+    from system.Models.Doctor import Doctor
     app.register_blueprint(doctor,url_prefix="/doctor")
 
     from system.Models.Schedule import Schedule
+    from system.schedule import scheduler
+    app.register_blueprint(scheduler,url_prefix="/schedule")
     return app
