@@ -13,6 +13,8 @@ class Doctor(db.Model):
     _password = db.Column(db.String)
     active = db.Column(db.Boolean,default=False)
 
+    scheduled_data = db.relationship("Schedule",backref="scheduled_data",lazy="dynamic")
+
     @property
     def password(self):
         return self._password

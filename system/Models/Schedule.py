@@ -6,13 +6,7 @@ from sqlalchemy.dialects.mysql import TIME
 def default_contact(context):
     # context sensitive default
     id = context.current_parameters.get("doctor_id")
-    return Doctor.query.filter_by(id).first().phone_no
-
-def default_slot_end(context):
-    slot_start = context.current_parameters.get("slot_start")
-    default_hours = 2
-    slot_end = slot_start-default_hours
-    return slot_end
+    return Doctor.query.filter_by(id=id).first().phone_no
 
 class Schedule(db.Model):
     id = db.Column(db.Integer,primary_key = True)
@@ -27,7 +21,7 @@ class Schedule(db.Model):
     slot_end = db.Column(TIME())
     
     booking_start = db.Column(db.Integer,default=7)# 1,2,3,4,5,6,7,.....before.
-    booking_end = db.Column(db.DateTime,default=default_slot_end)
+    booking_end = db.Column(db.Integer,default=2) # 2hours before before the slot_start
     
     fees = db.Column(db.Integer)
     limit = db.Column(db.Integer)
