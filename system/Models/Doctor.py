@@ -1,5 +1,6 @@
 from system import db
 from werkzeug.security import check_password_hash , generate_password_hash
+from system.Models.ActiveDoctor import ActiveDoctor
 class Doctor(db.Model):
     id = db.Column(db.Integer,primary_key = True)
     name = db.Column(db.String(30),nullable=False)
@@ -13,7 +14,7 @@ class Doctor(db.Model):
     _password = db.Column(db.String)
     active = db.Column(db.Boolean,default=False)
 
-    scheduled_data = db.relationship("Schedule",backref="scheduled_data",lazy="dynamic")
+    active_id = db.relationship("ActiveDoctor",backref="active_id",lazy="dynamic")
 
     @property
     def password(self):
@@ -27,10 +28,11 @@ class Doctor(db.Model):
     def set_active(cls,id):
         doctor = Doctor.query.filter_by(id=id).first()
         doctor.active = True
+        new_active_doctor = ActiveDoctor(doctor_id=id)
+        db.session.add(new_active_doctor)
         db.session.commit()
     
     @classmethod
     def check_password(cls,password,email):
         doctor = Doctor.query.filter_by(email=email).first_or_404()
         return check_password_hash(doctor.password,password)
-        

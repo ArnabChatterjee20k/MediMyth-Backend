@@ -2,15 +2,15 @@ from system import db
 from system.Models.Doctor import Doctor
 from datetime import datetime 
 from datetime import timedelta
-from sqlalchemy.dialects.mysql import TIME
+from sqlalchemy.dialects.postgresql import TIME
 def default_contact(context):
     # context sensitive default
-    id = context.current_parameters.get("doctor_id")
+    id = context.current_parameters.get("active_doctor_id")##since we will be dealing active doctor
     return Doctor.query.filter_by(id=id).first().phone_no
 
 class Schedule(db.Model):
     id = db.Column(db.Integer,primary_key = True)
-    doctor_id = db.Column(db.Integer,db.ForeignKey("doctor.id",onupdate="CASCADE",ondelete="CASCADE"),nullable=False)
+    active_doctor_id = db.Column(db.Integer,db.ForeignKey("active_doctor.id",onupdate="CASCADE",ondelete="CASCADE"),nullable=False)
     phone_no = db.Column(db.String,default=default_contact)
     
     day = db.Column(db.Integer,nullable=False) # accepting weekday means if day is monday then 0, if tuesday then 1
