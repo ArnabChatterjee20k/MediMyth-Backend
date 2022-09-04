@@ -22,4 +22,6 @@ def create_api():
     from system.Models.Schedule import Schedule
     from system.schedule import scheduler
     app.register_blueprint(scheduler,url_prefix="/schedule")
+
+    from system.Models.Appointment import Appointment
     return app

@@ -31,3 +31,6 @@ class Schedule(db.Model):
     medical_shop = db.Column(db.String)
 
     address = db.Column(db.String,nullable=False)
+
+    # appointments
+    appointment_data = db.relationship("Appointment",backref="appointment_data")
