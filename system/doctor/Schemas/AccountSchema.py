@@ -20,6 +20,7 @@ class AccountSchema(Schema):
             if(len(data)):
                 return data
             raise ValidationError("Data is empty","status")
+        return data
     @post_load
     def serialize_data(self,data,**kwargs):
         return self.dump(data)
