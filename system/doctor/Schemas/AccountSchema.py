@@ -1,4 +1,4 @@
-from marshmallow import Schema , fields, validate , post_load , EXCLUDE
+from marshmallow import Schema , fields, validate , post_load , EXCLUDE , pre_load , ValidationError
 class AccountSchema(Schema):
     class Meta:
         unknown = EXCLUDE # excluding the unknown field
@@ -12,6 +12,14 @@ class AccountSchema(Schema):
     password = fields.Str(required=True)
     profile_picture = fields.Raw(type="file",data_key="profile picture")
     
+    @pre_load
+    def check(self,data,**kwargs):
+        if(self.partial):
+        # if self.partial is true we will check whether the data is empty
+        ### this is beneficial when we want to update our data
+            if(len(data)):
+                return data
+            raise ValidationError("Data is empty","status")
     @post_load
     def serialize_data(self,data,**kwargs):
         return self.dump(data)
