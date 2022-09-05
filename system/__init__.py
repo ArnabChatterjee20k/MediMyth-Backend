@@ -17,9 +17,9 @@ def create_api():
 
     from system.doctor import doctor
     from system.Models.Doctor import Doctor
+    from system.Models.ActiveDoctor import ActiveDoctor
     app.register_blueprint(doctor,url_prefix="/doctor")
 
-    from system.Models.Schedule import Schedule
     from system.schedule import scheduler
     app.register_blueprint(scheduler,url_prefix="/schedule")
 

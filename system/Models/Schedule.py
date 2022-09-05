@@ -34,3 +34,14 @@ class Schedule(db.Model):
 
     # appointments
     appointment_data = db.relationship("Appointment",backref="appointment_data")
+
+
+    def data_exists(self)->bool:
+        search_params = {}
+
+        for col_name in self.__table__.columns.keys():
+            data = getattr(self,col_name,None)
+            if(data):
+                search_params[col_name] = data
+        
+        return bool(Schedule.query.filter_by(**search_params).first())

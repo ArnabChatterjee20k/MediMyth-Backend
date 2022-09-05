@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from flask import make_response , request , jsonify
+from flask import make_response , jsonify
 from system import db
 from system.Models.Doctor import Doctor
 from system.Models.Schedule import Schedule
@@ -25,10 +25,16 @@ class Scheduler(Resource):
         required_data["active_doctor_id"] = doctor_id
         schedule = Schedule(**required_data)
 
+        # if schedule already exists
+        ## TODO: need to be talked about the clinic_name and medical_shop
+        if(schedule.data_exists()):
+            return make_response({"status":"schedule already exists"},403)
+
         try:
             db.session.add(schedule)
-            db.session.commit()            
-        except Exception:
+            db.session.commit()       
+            return make_response({"status":"success"},200)   
+        except:
             return make_response({"status":"internal server error"},500)
 
     @token_required
@@ -44,3 +50,7 @@ class Scheduler(Resource):
         schema = ScheduleDoctorSchema()
         data = Schedule.query.filter_by(active_doctor_id=doctor_id).all()
         return jsonify((schema.dump(data,many=True)))
+    
+    @token_required
+    def put(self,**data):
+        pass
