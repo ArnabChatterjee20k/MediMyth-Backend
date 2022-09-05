@@ -26,18 +26,16 @@ class Account(Resource):
         # updated data is in update key of data
         update_data = data.get("update")
         email = data.get("email")
-        if(len(data)):
-            # Doctor().update_data(data.get("email"),update_data)
-            doctor = Doctor.query.filter_by(email=email)
-            doctor.first_or_404() ## for checking the existance
-            doctor.update(update_data)
-            db.session.commit()
-            response = {"status":"updated"}
-            new_email = update_data.get("email")
-            if new_email:
-                response["token"] = generate_jwt({"email":new_email})            
-            return make_response(response,200) #to gene
-        return make_response({"status":"no data to update"},403)
+        # Doctor().update_data(data.get("email"),update_data)
+        doctor = Doctor.query.filter_by(email=email)
+        doctor.first_or_404() ## for checking the existance
+        doctor.update(update_data)
+        db.session.commit()
+        response = {"status":"updated"}
+        new_email = update_data.get("email")
+        if new_email:
+            response["token"] = generate_jwt({"email":new_email})            
+        return make_response(response,200) #to generate the response with the new email if email updated else status
     
     @token_required
     def delete(self,**data):
