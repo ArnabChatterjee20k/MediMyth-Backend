@@ -1,4 +1,5 @@
 from marshmallow import Schema , fields, validate , post_load , EXCLUDE , pre_load , ValidationError
+from system.Config import Config
 class AccountSchema(Schema):
     class Meta:
         unknown = EXCLUDE # excluding the unknown field
@@ -19,7 +20,7 @@ class AccountSchema(Schema):
         ### this is beneficial when we want to update our data
             if(len(data)):
                 return data
-            raise ValidationError("Data is empty","status")
+            raise ValidationError("Data is empty",Config.RESPONSE_KEY)
         return data
     @post_load
     def serialize_data(self,data,**kwargs):

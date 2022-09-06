@@ -1,5 +1,5 @@
 from marshmallow import Schema , fields , validate , EXCLUDE , pre_load , post_load , ValidationError
-# from Config import Config
+from Config import Config
 
 class ScheduleSchema(Schema):
     class Meta:
@@ -25,11 +25,11 @@ class ScheduleSchema(Schema):
         ### this is beneficial when we want to update our data
             if(len(data)):
                 return data
-            raise ValidationError("Data is empty","status")
+            raise ValidationError("Data is empty",Config.RESPONSE_KEY)
 
         ## if self.partial is Fasle we will check either of them should be present
         if not data.get("clinic_name") and not data.get("medical_shop") :
-            raise ValidationError('Atleast one of medical shop and clinic name should be present',"status")
+            raise ValidationError('Atleast one of medical shop and clinic name should be present',Config.RESPONSE_KEY)
         
         return data
 
