@@ -15,7 +15,6 @@ class ScheduleAccess(Resource):
     def put(self,schedule_id,*args,**data):
         required_data = data.get("update")
         email = data.get("email")
-        print(required_data,email)
         try:
             Schedule().check_and_update(schedule_id,email,**required_data)
             print("put",args,data)
