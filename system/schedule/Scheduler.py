@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask_restful import Resource
 from flask import make_response , jsonify , request
 from system import db
@@ -5,7 +6,6 @@ from system.Models.Doctor import Doctor
 from system.Models.Schedule import Schedule
 from system.schedule.utils.VerifySchedule import verify_schedule
 from system.schedule.Schemas.ScheduleDoctorSchema import ScheduleDoctorSchema
-from system.schedule.utils.VerifyScheduleUpdate import verify_update_schedule
 from system.utils.JWT import token_required
 
 
@@ -51,17 +51,3 @@ class Scheduler(Resource):
         schema = ScheduleDoctorSchema()
         data = Schedule.query.filter_by(active_doctor_id=doctor_id).all()
         return jsonify((schema.dump(data,many=True)))
-    
-    @verify_update_schedule
-    @token_required
-    def put(self,**data):
-        required_data = data.get("update")
-        email = data.get("email")
-        schedule_id = request.args.get("schedule")
-        try:
-            Schedule().check_and_update(schedule_id,email,**required_data)
-        except:
-            return make_response({"status":"Not found"},404)
-
-        ##Todo: send otp to all patient appointed this meeting
-        return make_response({"status":"updated"},200)
