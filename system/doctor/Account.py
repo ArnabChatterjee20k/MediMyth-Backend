@@ -6,6 +6,7 @@ from system.doctor.utils.VerifyUpdate import verify_update
 from system.Models.Doctor import Doctor
 from system.utils.JWT import generate_jwt , token_required
 from system import db
+from system.Config import Config
 class Account(Resource):
     @verify_login
     def get(self,**data):
@@ -15,9 +16,9 @@ class Account(Resource):
             doctor = Doctor().check_password(email=email,password=password)
             if doctor:
                 return make_response({"token":generate_jwt({"email":email})})
-            return make_response({"status":"Invalid Password"},400)
+            return make_response({Config.RESPONSE_KEY:"Invalid Password"},400)
         except:
-            return make_response({"status":"Email not found"},404)
+            return make_response({Config.RESPONSE_KEY:"Email not found"},404)
     
     @verify_update
     @token_required
@@ -31,7 +32,7 @@ class Account(Resource):
         doctor.first_or_404() ## for checking the existance
         doctor.update(update_data)
         db.session.commit()
-        response = {"status":"updated"}
+        response = {Config.RESPONSE_KEY:"updated"}
         new_email = update_data.get("email")
         if new_email:
             response["token"] = generate_jwt({"email":new_email})            
@@ -44,4 +45,4 @@ class Account(Resource):
         db.session.delete(doctor)
         db.session.commit()
 
-        return make_response({"status":"deleted"},200)
+        return make_response({Config.RESPONSE_KEY:"deleted"},200)

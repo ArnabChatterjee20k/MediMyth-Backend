@@ -7,7 +7,7 @@ from system.Models.Schedule import Schedule
 from system.schedule.utils.VerifySchedule import verify_schedule
 from system.schedule.Schemas.ScheduleDoctorSchema import ScheduleDoctorSchema
 from system.utils.JWT import token_required
-
+from system.Config import Config
 
 class Scheduler(Resource):
     """This is for doctor"""
@@ -19,7 +19,7 @@ class Scheduler(Resource):
             doctor = Doctor.query.filter_by(email=email,active=True).first_or_404() 
             # seeing if doctor is active or not. if not active we will not search in active_doctor table
         except:
-            return make_response({"status":"doctor not found"},404)
+            return make_response({Config.RESPONSE_KEY:"doctor not found"},404)
         doctor_id = doctor.active_id.first().id
 
         required_data = data.get("update")
@@ -29,14 +29,14 @@ class Scheduler(Resource):
         # if schedule already exists
         ## TODO: need to be talked about the clinic_name and medical_shop
         if(schedule.data_exists()):
-            return make_response({"status":"schedule already exists"},403)
+            return make_response({Config.RESPONSE_KEY:"schedule already exists"},403)
 
         try:
             db.session.add(schedule)
             db.session.commit()       
-            return make_response({"status":"success"},200)   
+            return make_response({Config.RESPONSE_KEY:"success"},200)   
         except:
-            return make_response({"status":"internal server error"},500)
+            return make_response({Config.RESPONSE_KEY:"internal server error"},500)
 
     @token_required
     def get(self,**data):
@@ -45,7 +45,7 @@ class Scheduler(Resource):
             doctor = Doctor.query.filter_by(email=email,active=True).first_or_404() 
             # seeing if doctor is active or not. if not active we will not search in active_doctor table
         except:
-            return make_response({"status":"doctor not found"},404)
+            return make_response({Config.RESPONSE_KEY:"doctor not found"},404)
         doctor_id = doctor.active_id.first().id
 
         schema = ScheduleDoctorSchema()

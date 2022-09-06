@@ -24,7 +24,7 @@ def token_required(function):
                 # token containing some data like email which may be also present in the kwargs
                 # here if extra data comes from the previous function then that data comes through kwargs. 
                 # **data and **kwargs will get merged into a single dictionary automatically as function can accept only one **kwargs but if we pass multiple then all of them get merged into one
-                return make_response({"status":"invalid access token"},400)
+                return make_response({Config.RESPONSE_KEY:"invalid access token"},400)
             return function(*args,**data,**kwargs) # both the data from kwargs and from this function 
-        return make_response({"status":"access-token not found"},404)
+        return make_response({Config.RESPONSE_KEY:"access-token not found"},404)
     return inner

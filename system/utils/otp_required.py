@@ -9,10 +9,10 @@ def otp_required(function):
         token = request.headers.get("token")
         phone_number = request.args.get("phone")
         if not token:
-            message = jsonify({"status":"OTP not provided"})
+            message = jsonify({Config.RESPONSE_KEY:"OTP not provided"})
             return make_response(message,400)
         if not phone_number:
-            message = jsonify({"status":"phone number not provided"})
+            message = jsonify({Config.RESPONSE_KEY:"phone number not provided"})
             return make_response(message,400)
         try:
             if Config.PRODUCTION:
@@ -20,6 +20,6 @@ def otp_required(function):
             return function(*args,**kwargs)
         except Exception as e:
             print(e)
-            message = jsonify({"status":"invlaid otp"})
+            message = jsonify({Config.RESPONSE_KEY:"invlaid otp"})
             return make_response(message,400)
     return inner

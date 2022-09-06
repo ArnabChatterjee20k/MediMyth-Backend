@@ -6,7 +6,7 @@ from system import db
 from system.Models.Doctor import Doctor
 from sqlalchemy.exc import IntegrityError
 from system.utils.JWT import generate_jwt
-
+from system.Config import Config
 class Registration(Resource):
     @verify_register
     @otp_required
@@ -27,4 +27,4 @@ class Registration(Resource):
             token = generate_jwt({"email":doctor.email})
             return jsonify({"token":token})
         except IntegrityError as err:
-            return make_response({"status":"Please check your email or registration number"},400)
+            return make_response({Config.RESPONSE_KEY:"Please check your email or registration number"},400)
