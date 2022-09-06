@@ -1,6 +1,7 @@
 from system import db
 from system.Models.Doctor import Doctor
 from sqlalchemy.dialects.postgresql import TIME
+from sqlalchemy import func
 def default_contact(context):
     # context sensitive default
     id = context.current_parameters.get("active_doctor_id")##since we will be dealing active doctor
@@ -41,6 +42,11 @@ class Schedule(db.Model):
             data = getattr(self,col_name,None)
             if(data):
                 search_params[col_name] = data
+<<<<<<< HEAD
+=======
+        # print(datetime.strptime(self.slot_start,"%H:%M:%S").time())
+        print(func.date(self.slot_start))
+>>>>>>> 5bece28de3161e267e5e63249331a25fef68b668
         return bool(Schedule.query.filter_by(**search_params).first())
     
 
