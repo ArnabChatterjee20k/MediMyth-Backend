@@ -12,7 +12,7 @@ def verify_jwt(data):
 def token_required(function):
     @wraps(function)
     def inner(*args,**kwargs):
-        print("jwt",kwargs)
+        # print("jwt",kwargs)
         token = request.headers.get("access-token")
         if token:
             try:

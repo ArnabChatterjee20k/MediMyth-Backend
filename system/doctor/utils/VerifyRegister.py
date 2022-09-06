@@ -11,7 +11,8 @@ def verify_register(function):
         data = request.json
         try:
             result = schema.load(data)
-            return function(*args,**result)
+            kwargs.update({"update":result})
+            return function(*args,**kwargs)
         except ValidationError as error:
             return error.messages , 400
     

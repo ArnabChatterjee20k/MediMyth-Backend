@@ -1,5 +1,5 @@
 from marshmallow import Schema , fields , validate , EXCLUDE , pre_load , post_load , ValidationError
-from Config import Config
+from system.Config import Config
 
 class ScheduleSchema(Schema):
     class Meta:

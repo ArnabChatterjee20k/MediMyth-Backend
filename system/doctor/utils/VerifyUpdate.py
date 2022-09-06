@@ -10,7 +10,8 @@ def verify_update(function):
         schema = AccountSchema(partial=True)
         try:
             result = schema.load(data)
-            return function(*args,**result)
+            kwargs.update({"update":result})
+            return function(*args,**kwargs)
         except ValidationError as error:
             return error.messages , 400
     
