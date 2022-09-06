@@ -1,7 +1,5 @@
 from system import db
 from system.Models.Doctor import Doctor
-from datetime import datetime 
-from datetime import timedelta
 from sqlalchemy.dialects.postgresql import TIME
 def default_contact(context):
     # context sensitive default
@@ -43,12 +41,11 @@ class Schedule(db.Model):
             data = getattr(self,col_name,None)
             if(data):
                 search_params[col_name] = data
-        
         return bool(Schedule.query.filter_by(**search_params).first())
     
 
     @classmethod
-    def update_schedule(cls,email,schedule_id):
+    def check_schedule(cls,email,schedule_id):
         doctor = Doctor.query.filter_by(email=email).first_or_404()
         doctor_id = doctor.active_id.first().id
         current_schedule_query = Schedule.query.filter_by(id=schedule_id,active_doctor_id=doctor_id)
@@ -57,6 +54,12 @@ class Schedule(db.Model):
     
     @classmethod
     def check_and_update(cls,id,email,**data):
-        schedule = cls.update_schedule(email=email,schedule_id=id)
+        schedule = cls.check_schedule(email=email,schedule_id=id)
         schedule.update(data)
+        db.session.commit()
+
+    @classmethod
+    def check_and_delete(cls,email,id):
+        schedule = cls.check_schedule(email=email,schedule_id=id).first()
+        db.session.delete(schedule)
         db.session.commit()
