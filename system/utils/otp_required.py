@@ -1,6 +1,7 @@
 from system.utils.verifyOTP import check
 from functools import wraps
 from flask import request , make_response , jsonify
+from system.Config import Config
 
 def otp_required(function):
     @wraps(function)
@@ -14,7 +15,8 @@ def otp_required(function):
             message = jsonify({"status":"phone number not provided"})
             return make_response(message,400)
         try:
-            check(code=token,phone=phone_number)
+            if Config.PRODUCTION:
+                check(code=token,phone=phone_number)
             return function(*args,**kwargs)
         except Exception as e:
             print(e)

@@ -9,7 +9,7 @@ from system.utils.JWT import generate_jwt
 
 class Registration(Resource):
     @verify_register
-    # @otp_required
+    @otp_required
     def post(self,*args,**data):
         doctor = Doctor()
         doctor.name = data.get("name")
