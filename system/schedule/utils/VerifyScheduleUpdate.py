@@ -8,7 +8,8 @@ def verify_update_schedule(function):
         data = request.json
         try:
             result = schema.load(data)
+            kwargs.update({"update":result})
         except ValidationError as error:
             return error.messages , 400
-        return function(*args,**result)
+        return function(*args,**kwargs)
     return inner
