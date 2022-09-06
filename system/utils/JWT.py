@@ -12,7 +12,7 @@ def verify_jwt(data):
 def token_required(function):
     @wraps(function)
     def inner(*args,**kwargs):
-        # print(kwargs)
+        print("jwt",kwargs)
         token = request.headers.get("access-token")
         if token:
             try:
@@ -22,9 +22,9 @@ def token_required(function):
 
                 # if data is passed to kwargs from another function then we should accept that and also send that data
                 # token containing some data like email which may be also present in the kwargs
+                # here if extra data comes from the previous function then that data comes through kwargs. 
+                # **data and **kwargs will get merged into a single dictionary automatically as function can accept only one **kwargs but if we pass multiple then all of them get merged into one
                 return make_response({"status":"invalid access token"},400)
-            if(len(kwargs)):
-                data.update({"update":kwargs}) #update returns none
-            return function(*args,**data)
+            return function(*args,**data,**kwargs) # both the data from kwargs and from this function 
         return make_response({"status":"access-token not found"},404)
     return inner
