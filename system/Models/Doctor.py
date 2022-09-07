@@ -1,6 +1,7 @@
 from system import db
 from werkzeug.security import check_password_hash , generate_password_hash
 from system.Models.ActiveDoctor import ActiveDoctor
+from system.Config import Config
 class Doctor(db.Model):
     id = db.Column(db.Integer,primary_key = True)
     name = db.Column(db.String(30),nullable=False)
@@ -30,6 +31,10 @@ class Doctor(db.Model):
         doctor.active = True
         new_active_doctor = ActiveDoctor(doctor_id=id)
         db.session.add(new_active_doctor)
+        # flushing the object to the database to access it's id before adding to the database
+        db.session.flush()
+        active_id = new_active_doctor.id
+        new_active_doctor.active_doctor_id = f"{Config.DOCTOR_TAG}-{active_id}"
         db.session.commit()
     
     @classmethod

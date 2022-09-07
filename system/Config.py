@@ -9,3 +9,4 @@ class Config:
     TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
     TWILIO_SERVICE_ID = os.environ.get("TWILIO_SERVICE_ID")
     RESPONSE_KEY = "status"
+    DOCTOR_TAG = "MM"
