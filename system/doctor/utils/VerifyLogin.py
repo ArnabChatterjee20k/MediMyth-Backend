@@ -10,7 +10,8 @@ def verify_login(function):
         schema = AccountSchema(only=("email","password"))
         try:
             result = schema.load(data)
-            return function(*args,**result)
+            kwargs.update({"update":result})
+            return function(*args,**kwargs)
         except ValidationError as error:
             return error.messages , 400
     

@@ -11,6 +11,7 @@ class Registration(Resource):
     @verify_register
     @otp_required
     def post(self,*args,**data):
+        data = data.get("update")
         doctor = Doctor()
         doctor.name = data.get("name")
         doctor.phone_no = data.get("phone number")

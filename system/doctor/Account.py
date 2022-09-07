@@ -10,6 +10,7 @@ from system.Config import Config
 class Account(Resource):
     @verify_login
     def get(self,**data):
+        data = data.get("update")
         email = data.get("email")
         password = data.get("password")
         try:
