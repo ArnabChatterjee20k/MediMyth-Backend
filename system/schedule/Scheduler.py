@@ -14,6 +14,7 @@ class Scheduler(Resource):
     @verify_schedule
     @token_required
     def post(self,**data):
+        print(data)
         email = data.get("email")
         try:
             doctor = Doctor.query.filter_by(email=email,active=True).first_or_404() 
@@ -24,6 +25,11 @@ class Scheduler(Resource):
 
         required_data = data.get("update")
         required_data["active_doctor_id"] = doctor_id
+
+        # checking if phone number present in the schedule or not
+        if not required_data.get("phone_no"):
+            required_data["phone_no"] = doctor.phone_no
+
         schedule = Schedule(**required_data)
 
         # if schedule already exists
@@ -35,7 +41,7 @@ class Scheduler(Resource):
             db.session.add(schedule)
             db.session.commit()       
             return make_response({Config.RESPONSE_KEY:"success"},200)   
-        except:
+        except Exception as e:
             return make_response({Config.RESPONSE_KEY:"internal server error"},500)
 
     @token_required
