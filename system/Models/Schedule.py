@@ -1,5 +1,3 @@
-from operator import and_
-from re import L
 from system import db
 from system.Models.Doctor import Doctor
 from system.Models.ActiveDoctor import ActiveDoctor
