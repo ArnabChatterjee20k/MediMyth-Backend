@@ -1,3 +1,4 @@
+from enum import unique
 from system import db
 from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import datetime , date, timedelta
@@ -9,23 +10,28 @@ class Appointment(db.Model):
     id = db.Column(db.Integer,primary_key = True)
     appointment_id = db.Column(db.String)
     schedule_id = db.Column(db.Integer,db.ForeignKey("schedule.id",onupdate="CASCADE",ondelete="CASCADE"),nullable=False)
+    appointment_id = db.Column(db.String,unique=True)
+    person_id = db.Column(db.Integer)
     name = db.Column(db.String(30),nullable=False)
     contact_number = db.Column(db.String(10),nullable=False)##contact number of the patient
     age = db.Column(db.Integer,nullable=False)
     date = db.Column(db.DateTime,default = datetime.utcnow)
 
-    @hybrid_property
-    def appointment_id(self):
-        return f"MMA-{self.id}"
+    # @hybrid_property
+    # def appointment_id(self):
+    #     return f"MMA-{self.id}"
 
 
     @classmethod
     def check_booking(cls,id):
         schedule = Schedule.query.filter_by(id=id).first()
+        if not schedule:
+            print(schedule)
+            return False
         specific_week = schedule.specific_week
         if specific_week:
             return cls.check_booking_start_specific_week(schedule,specific_week) and cls.check_booking_end_specific_week(schedule,specific_week)
-        return cls.check_booking_start(schedule) and cls.check_booking_end(schedule) and cls.check_limit(id)
+        return cls.check_booking_start(schedule) and cls.check_booking_end(schedule) and cls.check_limit(schedule)
     
     @classmethod
     def check_booking_start_specific_week(cls,schedule,specific_week):
@@ -88,10 +94,10 @@ class Appointment(db.Model):
         return datetime.now()<endtime
 
     @classmethod 
-    def check_limit(cls,id):
-        schedule = Schedule.query.filter_by(id=id).first()
-        appointments = schedule.appointment_data
-        limit = schedule.limit
+    def check_limit(cls,schedule):
+        appointments = len(schedule.appointment_data)
+        limit = schedule.patient_limit
+        print(appointments,limit)
         if limit and appointments>limit:
             return False
         return True

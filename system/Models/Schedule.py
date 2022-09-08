@@ -19,7 +19,7 @@ class Schedule(db.Model):
     booking_end = db.Column(db.Integer,default=2) # 2hours before before the slot_start
     
     fees = db.Column(db.Integer)
-    limit = db.Column(db.Integer)
+    patient_limit = db.Column(db.Integer)
     
     # we need to provide atleast one of clinic name and medical shop
     clinic_name = db.Column(db.String)

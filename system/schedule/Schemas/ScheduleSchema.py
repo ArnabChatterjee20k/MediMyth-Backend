@@ -13,7 +13,7 @@ class ScheduleSchema(Schema):
     booking_start = fields.Int()
     booking_end  = fields.Int()
     fees = fields.Int()
-    limit = fields.Int()
+    patient_limit = fields.Int()
     clinic_name = fields.Str()
     medical_shop = fields.Str()
     address = fields.Str(required=True)
