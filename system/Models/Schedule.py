@@ -1,8 +1,10 @@
+from operator import and_
+from re import L
 from system import db
 from system.Models.Doctor import Doctor
 from system.Models.ActiveDoctor import ActiveDoctor
 from sqlalchemy.dialects.postgresql import TIME
-from sqlalchemy import func
+from sqlalchemy import or_ , and_ 
 class Schedule(db.Model):
     id = db.Column(db.Integer,primary_key = True)
     active_doctor_id = db.Column(db.Integer,db.ForeignKey("active_doctor.id",onupdate="CASCADE",ondelete="CASCADE"),nullable=False)
@@ -40,6 +42,59 @@ class Schedule(db.Model):
                 search_params[col_name] = data
         return bool(Schedule.query.filter_by(**search_params).first())
     
+    def get_slot_start(self):
+        # Although slot start will be definitely present in the attributes but still validating
+        return getattr(self,"slot_start",None)
+    
+    def get_slot_end(self):
+        # slot end may not be present in the attributes so it will give error. So that default None will be returned in that case
+        return getattr(self,"slot_end",None)
+
+    def get_active_doctor_id(self):
+        return getattr(self,"active_doctor_id",None)
+
+    
+    def check_slot(self):
+        """
+            checking if slot_start and slot_end lying between other schedule times or not of a specific active doctor
+        """
+        active_doctor_schedules = Schedule.query.filter(Schedule.active_doctor_id==self.get_active_doctor_id())
+        # using closures to encapsulate 
+        
+        schedule_cant_be_created = False
+
+        slot_start = self.get_slot_start()
+        slot_end = self.get_slot_end()
+
+        if slot_start and slot_end:
+            if active_doctor_schedules.filter(or_(
+                Schedule.slot_start.between(slot_start,slot_end) , 
+                Schedule.slot_end.between(slot_start,slot_end)
+                )).first():
+                return True
+        
+        if slot_start and not slot_end:
+            if active_doctor_schedules.filter(
+                and_((Schedule.slot_start<=slot_start),
+                and_(Schedule.slot_end>slot_start,Schedule.slot_end.isnot(None)))
+                ).first():
+                return True
+            
+        if not slot_start and slot_end:
+            if active_doctor_schedules.filter(and_((Schedule.slot_start<slot_end),
+                and_(Schedule.slot_end>=slot_end,Schedule.slot_end.isnot(None)))).first():
+                return True 
+
+        # if slot_start and slot_end:
+        #     if active_doctor_schedules.filter(
+        #         or_(
+        #             or_(Schedule.slot_start<=slot_start,Schedule.slot_end>slot_start),
+        #             or_(Schedule.slot_start<slot_end,Schedule.slot_end>=Schedule.slot_start)    
+        #         )
+        #             ).first():
+        #         return True
+        
+        return schedule_cant_be_created
 
     @classmethod
     def check_schedule(cls,email,schedule_id):

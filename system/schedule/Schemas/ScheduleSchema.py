@@ -9,7 +9,7 @@ class ScheduleSchema(Schema):
     day = fields.Int(required=True,validate=(validate.Range(0,6)))
     specific_week = fields.Int(validate=(validate.Range(1,4)))
     slot_start = fields.Time(required=True)
-    slot_end = fields.Int()
+    slot_end = fields.Time()
     booking_start = fields.Int()
     booking_end  = fields.Int()
     fees = fields.Int()

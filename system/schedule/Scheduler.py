@@ -16,15 +16,17 @@ class Scheduler(Resource):
     def post(self,**data):
         print(data)
         email = data.get("email")
+
         try:
             doctor = Doctor.query.filter_by(email=email,active=True).first_or_404() 
             # seeing if doctor is active or not. if not active we will not search in active_doctor table
         except:
             return make_response({Config.RESPONSE_KEY:"doctor not found"},404)
         doctor_id = doctor.active_id.first().id
-
+        
         required_data = data.get("update")
         required_data["active_doctor_id"] = doctor_id
+
 
         # checking if phone number present in the schedule or not
         if not required_data.get("phone_no"):
@@ -33,9 +35,8 @@ class Scheduler(Resource):
         schedule = Schedule(**required_data)
 
         # if schedule already exists
-        ## TODO: need to be talked about the clinic_name and medical_shop
-        if(schedule.data_exists()):
-            return make_response({Config.RESPONSE_KEY:"schedule already exists"},403)
+        if(schedule.check_slot() or schedule.data_exists()):
+            return make_response({Config.RESPONSE_KEY:"schedule already exists in this time"},403)
 
         try:
             db.session.add(schedule)
