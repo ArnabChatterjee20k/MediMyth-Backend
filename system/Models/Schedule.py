@@ -52,13 +52,21 @@ class Schedule(db.Model):
         return getattr(self,"active_doctor_id",None)
 
     
-    def check_slot(self):
+    def check_slot(self,doctor_id=None):
         """
             checking if slot_start and slot_end lying between other schedule times or not of a specific active doctor
         """
-        active_doctor_schedules = Schedule.query.filter(Schedule.active_doctor_id==self.get_active_doctor_id())
-        # using closures to encapsulate 
-        
+        if self.get_active_doctor_id():
+            active_doctor_schedules = Schedule.query.filter(Schedule.active_doctor_id==self.get_active_doctor_id())
+        elif doctor_id:
+            active_doctor_schedules = Schedule.query.filter(Schedule.active_doctor_id==doctor_id)
+        else:
+            raise Exception("Not active doctor id ")
+
+        print(active_doctor_schedules.all())
+        if not active_doctor_schedules.first():
+            return False
+
         schedule_cant_be_created = False
 
         slot_start = self.get_slot_start()
@@ -72,6 +80,7 @@ class Schedule(db.Model):
                 return True
         
         if slot_start and not slot_end:
+            print("Yes")
             if active_doctor_schedules.filter(
                 and_((Schedule.slot_start<=slot_start),
                 and_(Schedule.slot_end>slot_start,Schedule.slot_end.isnot(None)))
@@ -94,6 +103,10 @@ class Schedule(db.Model):
         
         return schedule_cant_be_created
 
+    @classmethod
+    def active_doctor_by_email(cls,email):
+        doctor = Doctor.query.filter_by(email=email).first_or_404()
+        return doctor.active_id.first().id
     @classmethod
     def check_schedule(cls,email,schedule_id):
         doctor = Doctor.query.filter_by(email=email).first_or_404()

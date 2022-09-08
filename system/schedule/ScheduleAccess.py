@@ -15,6 +15,9 @@ class ScheduleAccess(Resource):
     def put(self,schedule_id,*args,**data):
         required_data = data.get("update")
         email = data.get("email")
+        schedule = Schedule(**required_data) # constructing Schedule object 
+        if schedule.check_slot(doctor_id=Schedule().active_doctor_by_email(email)) or schedule.data_exists():
+            return make_response({Config.RESPONSE_KEY:"schedule already exists in this time"},403)
         try:
             Schedule().check_and_update(schedule_id,email,**required_data)
             print("put",args,data)
