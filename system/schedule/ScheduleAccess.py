@@ -16,10 +16,11 @@ class ScheduleAccess(Resource):
         required_data = data.get("update")
         email = data.get("email")
         schedule = Schedule(**required_data) # constructing Schedule object 
-        if schedule.check_slot(doctor_id=Schedule().active_doctor_by_email(email)) or schedule.data_exists():
+        active_doctor_id = Schedule().active_doctor_by_email(email)
+        if schedule.check_slot(doctor_id=active_doctor_id) or schedule.data_exists():
             return make_response({Config.RESPONSE_KEY:"schedule already exists in this time"},403)
         try:
-            Schedule().check_and_update(schedule_id,email,**required_data)
+            Schedule().check_and_update(schedule_id,active_doctor_id,**required_data)
             print("put",args,data)
         except:
             return make_response({Config.RESPONSE_KEY:"Not found"},404)
@@ -30,5 +31,6 @@ class ScheduleAccess(Resource):
     @token_required
     def delete(self,schedule_id,**data):
         email = data.get("email")
-        Schedule().check_and_delete(email,schedule_id)
+        active_doctor_id = Schedule().active_doctor_by_email(email)
+        Schedule().check_and_delete(active_doctor_id=active_doctor_id,id=schedule_id)
         return make_response({Config.RESPONSE_KEY:"deleted"},200)

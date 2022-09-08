@@ -108,21 +108,19 @@ class Schedule(db.Model):
         doctor = Doctor.query.filter_by(email=email).first_or_404()
         return doctor.active_id.first().id
     @classmethod
-    def check_schedule(cls,email,schedule_id):
-        doctor = Doctor.query.filter_by(email=email).first_or_404()
-        doctor_id = doctor.active_id.first().id
-        current_schedule_query = Schedule.query.filter_by(id=schedule_id,active_doctor_id=doctor_id)
+    def check_schedule(cls,active_doctor_id,schedule_id):
+        current_schedule_query = Schedule.query.filter_by(id=schedule_id,active_doctor_id=active_doctor_id)
         current_schedule = current_schedule_query.first_or_404()
         return current_schedule_query
     
     @classmethod
-    def check_and_update(cls,id,email,**data):
-        schedule = cls.check_schedule(email=email,schedule_id=id)
+    def check_and_update(cls,id,active_doctor_id,**data):
+        schedule = cls.check_schedule(active_doctor_id=active_doctor_id,schedule_id=id)
         schedule.update(data)
         db.session.commit()
 
     @classmethod
-    def check_and_delete(cls,email,id):
-        schedule = cls.check_schedule(email=email,schedule_id=id).first()
+    def check_and_delete(cls,active_doctor_id,id):
+        schedule = cls.check_schedule(active_doctor_id=active_doctor_id,schedule_id=id).first()
         db.session.delete(schedule)
         db.session.commit()
