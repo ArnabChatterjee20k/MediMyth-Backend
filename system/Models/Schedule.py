@@ -164,5 +164,8 @@ class Schedule(db.Model):
     @classmethod
     def check_and_delete(cls,active_doctor_id,id):
         schedule = cls.check_schedule(active_doctor_id=active_doctor_id,schedule_id=id).first()
+        patients = schedule.appointment_data
+        print(patients)
         db.session.delete(schedule)
         db.session.commit()
+        return patients # so that they can be notified
