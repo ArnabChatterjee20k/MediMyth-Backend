@@ -28,7 +28,7 @@ class Schedule(db.Model):
     address = db.Column(db.String,nullable=False)
 
     # appointments
-    appointment_data = db.relationship("Appointment",backref="appointment_data")
+    appointment_data = db.relationship("Appointment",backref="appointment_data",passive_deletes=True)
 
 
     def data_exists(self)->bool:
