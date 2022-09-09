@@ -6,6 +6,6 @@ class OTP(Resource):
     """For sending otp verification can be done by importing verifyOTP"""
     def get(self,phone):
         try:
-            send_sms(phone)
+            send_sms.delay(phone)
         except:
             return abort(400)

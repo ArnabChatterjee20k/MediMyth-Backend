@@ -1,6 +1,9 @@
 from twilio.rest import Client
 from system.Config import Config
-def send_sms(phone):
+from system import celery
+
+@celery.task
+def send_sms(phone,*args,**kwargs):
 
     account_sid = Config.TWILIO_ACCOUNT_SID
     auth_token = Config.TWILIO_AUTH_TOKEN
