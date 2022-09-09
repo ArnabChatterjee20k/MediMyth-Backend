@@ -18,7 +18,10 @@ class ScheduleAccess(Resource):
         email = data.get("email")
         schedule = Schedule(**required_data) # constructing Schedule object 
         active_doctor_id = Schedule().active_doctor_by_email(email)
-        if schedule.check_slot(doctor_id=active_doctor_id) or schedule.data_exists():
+        day = Schedule.query.filter(Schedule.active_doctor_id==active_doctor_id,Schedule.id==schedule_id).first_or_404().day
+        schedule.id = schedule_id
+        schedule.day = day
+        if schedule.check_slot(doctor_id=active_doctor_id,day=day) or schedule.data_exists():
             return make_response({Config.RESPONSE_KEY:"schedule already exists in this time"},403)
         try:
             Schedule().check_and_update(schedule_id,active_doctor_id,**required_data)

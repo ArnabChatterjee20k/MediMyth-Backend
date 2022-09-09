@@ -33,15 +33,20 @@ class Schedule(db.Model):
 
     def data_exists(self)->bool:
         search_params = {}
-        required_cols_to_be_checked = ["id","slot_start","slot_end","day"]
+        required_cols_to_be_checked = ["slot_start","slot_end","day"]
         column_attributes = self.__table__.columns.keys()
         # getting common values/intersection using set
         keys = set(required_cols_to_be_checked).intersection(set(column_attributes))
         for col_name in keys:
             data = getattr(self,col_name,None)
-            if(data):
+            if(data!=None):
                 search_params[col_name] = data
-        return bool(Schedule.query.filter_by(**search_params).first())
+        print(self.day)
+        print(self.id)
+        print(keys)
+        print("0th-> ",Schedule.query.filter(Schedule.id!=self.id).filter_by(**search_params).first())
+        print(Schedule.query.filter(Schedule.id!=self.id).filter_by(**search_params))
+        return bool(Schedule.query.filter(Schedule.id!=self.id).filter_by(**search_params).first())
     
     def get_slot_start(self):
         # Although slot start will be definitely present in the attributes but still validating
@@ -71,10 +76,15 @@ class Schedule(db.Model):
         if not required_active_doctor_id:
             raise Exception("No active doctor id present. Use a Schedule object containing active doctor id or pass it by keyworded arguments")
 
-        required_day = day or self.get_specific_day()
-        if not required_day:
+        if (day==0 and self.get_specific_day()==None) or (day==None and self.get_specific_day()==0):
+            required_day = 0
+        else:
+            required_day = day or self.day
+        print(required_day)
+        if required_day == None :
             raise Exception("No day present. Use a Schedule object containing day or pass it by keyworded arguments")
-        active_doctor_schedules = Schedule.query.filter(Schedule.active_doctor_id==required_active_doctor_id,Schedule.day==required_day)
+        print(self.id)
+        active_doctor_schedules = Schedule.query.filter(Schedule.active_doctor_id==required_active_doctor_id,Schedule.day==required_day,Schedule.id!=self.id)
 
         print(active_doctor_schedules.all())
         if not active_doctor_schedules.first():
@@ -90,19 +100,21 @@ class Schedule(db.Model):
                 Schedule.slot_start.between(slot_start,slot_end) , 
                 Schedule.slot_end.between(slot_start,slot_end)
                 )).first():
+                print("Yes 1st")
                 return True
         
         if slot_start and not slot_end:
-            print("Yes")
             if active_doctor_schedules.filter(
                 and_((Schedule.slot_start<=slot_start),
                 and_(Schedule.slot_end>slot_start,Schedule.slot_end.isnot(None)))
                 ).first():
-                return True
+                    print("Yes 2nd")
+                    return True
             
         if not slot_start and slot_end:
             if active_doctor_schedules.filter(and_((Schedule.slot_start<slot_end),
                 and_(Schedule.slot_end>=slot_end,Schedule.slot_end.isnot(None)))).first():
+                print("yes 3rd")
                 return True 
         
         return schedule_cant_be_created
