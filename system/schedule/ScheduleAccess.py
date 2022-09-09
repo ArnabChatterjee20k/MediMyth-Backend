@@ -18,9 +18,26 @@ class ScheduleAccess(Resource):
         email = data.get("email")
         schedule = Schedule(**required_data) # constructing Schedule object 
         active_doctor_id = Schedule().active_doctor_by_email(email)
-        day = Schedule.query.filter(Schedule.active_doctor_id==active_doctor_id,Schedule.id==schedule_id).first_or_404().day
+        old_schedule = Schedule.query.filter(Schedule.active_doctor_id==active_doctor_id,Schedule.id==schedule_id).first_or_404()
+        day = old_schedule.day
         schedule.id = schedule_id
         schedule.day = day
+        # since we have to check it here only so doing here only
+        slot_start = required_data.get("slot_start")
+        if slot_start:
+            print("yes")
+            slot_end = old_schedule.slot_end
+            conflict_time = Schedule.query.filter(Schedule.slot_start.between(slot_start,slot_end))
+            if conflict_time.first():
+                return make_response({Config.RESPONSE_KEY:"schedule already exists in this time"},403)
+        
+        slot_end = required_data.get("slot_end")
+        if slot_end:
+            slot_start = old_schedule.slot_start
+            conflict_time = Schedule.query.filter(Schedule.slot_end.between(slot_start,slot_end))
+            if conflict_time.first():
+                return make_response({Config.RESPONSE_KEY:"schedule already exists in this time"},403)
+
         if schedule.check_slot(doctor_id=active_doctor_id,day=day) or schedule.data_exists():
             return make_response({Config.RESPONSE_KEY:"schedule already exists in this time"},403)
         try:
