@@ -33,7 +33,7 @@ class Schedule(db.Model):
 
     def data_exists(self)->bool:
         search_params = {}
-        required_cols_to_be_checked = ["slot_start","slot_end","day"]
+        required_cols_to_be_checked = ["id","slot_start","slot_end","day"]
         column_attributes = self.__table__.columns.keys()
         # getting common values/intersection using set
         keys = set(required_cols_to_be_checked).intersection(set(column_attributes))
@@ -60,7 +60,7 @@ class Schedule(db.Model):
     def get_specific_day(self):
         return getattr(self,"day",None)
 
-    def check_slot(self,doctor_id=None):
+    def check_slot(self,doctor_id=None,day=None):
         """
             checking if slot_start and slot_end lying between other schedule times or not of a specific active doctor
             If externally doctor_id are passed then they will be taken otherwise they will be searched in the schedule object. 
@@ -71,7 +71,10 @@ class Schedule(db.Model):
         if not required_active_doctor_id:
             raise Exception("No active doctor id present. Use a Schedule object containing active doctor id or pass it by keyworded arguments")
 
-        active_doctor_schedules = Schedule.query.filter(Schedule.active_doctor_id==required_active_doctor_id)
+        required_day = day or self.get_specific_day()
+        if not required_day:
+            raise Exception("No day present. Use a Schedule object containing day or pass it by keyworded arguments")
+        active_doctor_schedules = Schedule.query.filter(Schedule.active_doctor_id==required_active_doctor_id,Schedule.day==required_day)
 
         print(active_doctor_schedules.all())
         if not active_doctor_schedules.first():
