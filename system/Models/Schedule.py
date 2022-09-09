@@ -60,15 +60,12 @@ class Schedule(db.Model):
     def get_specific_day(self):
         return getattr(self,"day",None)
 
-    def check_slot(self,doctor_id=None,day=None):
+    def check_slot(self,doctor_id=None):
         """
             checking if slot_start and slot_end lying between other schedule times or not of a specific active doctor
-            If externally doctor_id or day are passed then they will be taken otherwise they will be searched in the schedule object. 
+            If externally doctor_id are passed then they will be taken otherwise they will be searched in the schedule object. 
             If not found error
         """
-        required_day = day or self.get_specific_day() # either of them will be taken
-        if not required_day:
-            raise Exception("No day passed. Use a schedule object containing day or Pass it by day=Required day")
 
         required_active_doctor_id = doctor_id or self.get_active_doctor_id()
         if not required_active_doctor_id:
