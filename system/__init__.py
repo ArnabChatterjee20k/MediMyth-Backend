@@ -2,14 +2,17 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from system.Config import Config
+from celery import Celery
 
 db = SQLAlchemy()
 migrate = Migrate()
+celery = Celery(__name__,broker=Config.broker_url, result_backend=Config.result_backend)
 
 def create_api():
     app = Flask(__name__)
     app.config.from_object(Config)
     db.init_app(app)
+    celery.conf.update(app.config)
     migrate.init_app(app,db)
     
     from system.otp import otp
