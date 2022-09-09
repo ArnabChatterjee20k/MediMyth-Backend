@@ -33,8 +33,11 @@ class Schedule(db.Model):
 
     def data_exists(self)->bool:
         search_params = {}
-
-        for col_name in self.__table__.columns.keys():
+        required_cols_to_be_checked = ["slot_start","slot_end","day"]
+        column_attributes = self.__table__.columns.keys()
+        # getting common values/intersection using set
+        keys = set(required_cols_to_be_checked).intersection(set(column_attributes))
+        for col_name in keys:
             data = getattr(self,col_name,None)
             if(data):
                 search_params[col_name] = data
@@ -53,18 +56,25 @@ class Schedule(db.Model):
     
     def get_specific_week(self):
         return getattr(self,"specific_week",None)
+    
+    def get_specific_day(self):
+        return getattr(self,"day",None)
 
-    def check_slot_specific_week(self,doctor_id=None):
+    def check_slot(self,doctor_id=None,day=None):
         """
             checking if slot_start and slot_end lying between other schedule times or not of a specific active doctor
+            If externally doctor_id or day are passed then they will be taken otherwise they will be searched in the schedule object. 
+            If not found error
         """
-        if self.get_active_doctor_id():
-            active_doctor_schedules = Schedule.query.filter(Schedule.active_doctor_id==self.get_active_doctor_id(),Schedule.specific_week==self.get_specific_week())
-            print(Schedule.query.filter(Schedule.active_doctor_id==self.get_active_doctor_id(),Schedule.specific_week==self.get_specific_week()).all())
-        elif doctor_id:
-            active_doctor_schedules = Schedule.query.filter(Schedule.active_doctor_id==doctor_id,Schedule.specific_week==self.get_specific_week())
-        else:
-            raise Exception("Not active doctor id ")
+        required_day = day or self.get_specific_day() # either of them will be taken
+        if not required_day:
+            raise Exception("No day passed. Use a schedule object containing day or Pass it by day=Required day")
+
+        required_active_doctor_id = doctor_id or self.get_active_doctor_id()
+        if not required_active_doctor_id:
+            raise Exception("No active doctor id present. Use a Schedule object containing active doctor id or pass it by keyworded arguments")
+
+        active_doctor_schedules = Schedule.query.filter(Schedule.active_doctor_id==required_active_doctor_id)
 
         print(active_doctor_schedules.all())
         if not active_doctor_schedules.first():
@@ -96,54 +106,6 @@ class Schedule(db.Model):
                 return True 
         
         return schedule_cant_be_created
-
-    def check_slot_no_specific_week(self,doctor_id=None):
-        """
-            checking if slot_start and slot_end lying between other schedule times or not of a specific active doctor
-        """
-        if self.get_active_doctor_id():
-            active_doctor_schedules = Schedule.query.filter(Schedule.active_doctor_id==self.get_active_doctor_id())
-        elif doctor_id:
-            active_doctor_schedules = Schedule.query.filter(Schedule.active_doctor_id==doctor_id)
-        else:
-            raise Exception("Not active doctor id ")
-
-        print(active_doctor_schedules.all())
-        if not active_doctor_schedules.first():
-            return False
-
-        schedule_cant_be_created = False
-
-        slot_start = self.get_slot_start()
-        slot_end = self.get_slot_end()
-
-        if slot_start and slot_end:
-            if active_doctor_schedules.filter(or_(
-                Schedule.slot_start.between(slot_start,slot_end) , 
-                Schedule.slot_end.between(slot_start,slot_end)
-                )).first():
-                return True
-        
-        if slot_start and not slot_end:
-            print("Yes")
-            if active_doctor_schedules.filter(
-                and_((Schedule.slot_start<=slot_start),
-                and_(Schedule.slot_end>slot_start,Schedule.slot_end.isnot(None)))
-                ).first():
-                return True
-            
-        if not slot_start and slot_end:
-            if active_doctor_schedules.filter(and_((Schedule.slot_start<slot_end),
-                and_(Schedule.slot_end>=slot_end,Schedule.slot_end.isnot(None)))).first():
-                return True 
-        
-        return schedule_cant_be_created
-
-    def check_slot(self,doctor_id=None):
-        if not self.get_specific_week():
-            print("yes")
-            return self.check_slot_no_specific_week(doctor_id=doctor_id)
-        return self.check_slot_specific_week(doctor_id=doctor_id)
 
     @classmethod
     def active_doctor_by_email(cls,email):
