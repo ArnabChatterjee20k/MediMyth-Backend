@@ -18,7 +18,7 @@ class AppointmentHandler(Resource):
     @otp_required
     def post(self,schedule_id,**data):
         data = data.get("update")
-        exist = Appointment.query.filter_by(**data).first()
+        exist = Appointment.query.filter_by(schedule_id=schedule_id,**data).first()
         if exist:
             return make_response({Config.RESPONSE_KEY:"already registered"},403)    
         if Appointment.check_booking(schedule_id):
