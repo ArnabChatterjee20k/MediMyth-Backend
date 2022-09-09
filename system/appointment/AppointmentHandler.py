@@ -12,6 +12,7 @@ class AppointmentHandler(Resource):
     def get(self,schedule_id):
         schema = AppointmentDataSchema()
         data = Appointment.query.filter_by(schedule_id=schedule_id).all()
+        ## if schedule not exist then empty array
         return schema.dump(data,many=True)
 
     @verify_appointment
