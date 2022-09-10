@@ -121,7 +121,7 @@ class Schedule(db.Model):
 
     @classmethod
     def active_doctor_by_email(cls,email):
-        doctor = Doctor.query.filter_by(email=email).first_or_404()
+        doctor = Doctor.query.filter_by(email=email,active=True).first_or_404()
         return doctor.active_id.first().id
     @classmethod
     def check_schedule(cls,active_doctor_id,schedule_id):
