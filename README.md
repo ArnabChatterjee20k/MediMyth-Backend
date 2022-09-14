@@ -334,3 +334,75 @@ let data = await response.text();
 console.log(data);
 
 ```
+
+
+## Appointment 
+
+- Appointmenting to any schedule does not require any access-token
+- Patient needs to provide some information for booking
+- OTP verification will be their in booking. So otp token will be required
+
+#### Get all Appointments of a specific schedule
+
+```http
+  GET /appointment/<schedule id>
+```
+
+* Example
+
+```javascript
+let response = await fetch("127.0.0.1:5000/appointment/1", { 
+  method: "GET"
+});
+
+let data = await response.text();
+console.log(data);
+
+```
+
+#### Book an appointment
+
+- **Phone number must be verified before registration**
+
+```http
+  POST  /appointment/<schedule id>?phone=<phone number where otp is sent>
+```
+
+| Query Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `phone`      | `string(max size 10)` | **Required**|
+
+
+| Header Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `token`      | `string` | **Required**|
+
+| JSON Parameters | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `name`      | `string` | **Required**|
+| `age`      | `int` | **Required**|
+| `contact_number`      | `string(max of 10 size)` | **Required**|
+
+* Example
+```javascript
+let headersList = {
+ "token": "12345",
+ "Content-Type": "application/json"
+}
+
+let bodyContent = JSON.stringify({
+  "name":"arnab chatterjee",
+  "age":18,
+  "contact_number":"9064846599"
+});
+
+let response = await fetch("127.0.0.1:5000/appointment/1?phone=123456789", { 
+  method: "POST",
+  body: bodyContent,
+  headers: headersList
+});
+
+let data = await response.text();
+console.log(data);
+
+```
