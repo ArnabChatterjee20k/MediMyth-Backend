@@ -177,3 +177,160 @@ fetch('http://127.0.0.1:5000/doctor/', options)
 ```json
 "status":"status of account"
 ```
+
+
+## Schdule
+
+- Scheduling can be done by only **active doctors**.
+- We need access-token in the headers for dealing with schedule
+
+#### Get all schedules of a particular doctor
+
+```http
+  GET /schedule
+```
+
+| Header Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `access-token` | `string` | **Required**. Doctor Access Token |
+
+- **Example**
+```javascript
+let headersList = {
+ "access-token": "<your access token>"
+}
+
+let response = await fetch("/schedule", { 
+  method: "GET",
+  headers: headersList
+});
+
+let data = await response.text();
+console.log(data);
+```
+
+#### Create a schedule
+
+```http
+  POST /schedule/
+```
+
+| Header Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `access-token` | `string` | **Required**. Doctor Access Token |
+
+**Information you can post**
+| JSON Body | Type     | Requirement                |
+| :-------- | :------- | :------------------------- |
+| `phone_no` | `string(max 10 size)` | **Optional**. If not provided then doctor's phone number will be taken |
+| `day` | `int(0 to 6)` | **Required**.It represents the days in a week in numeric form |
+| `specific_week` | `int(1,4)` | **Optional**. |
+| `slot_start` | `string(in HH:MM:DD format)` | **Required**. |
+| `slot_end` | `string(in HH:MM:DD format)` | **Optional**. |
+| `booking_start` | `int` | **Optional**.Represents how **days before** the booking will start |
+| `booking_end` | `int` | **Optional**. Represents how many **hours before** the booking will end|
+| `fees` | `int` | **Optional**. |
+| `address` | `string` | **Optional**. |
+| `clinic_name` | `string` |Out of clinic_name and medical_shop atleast one is Required|
+| `medical_shop` | `string` | Out of clinic_name and medical_shop atleast one is Required |
+
+- **Example**
+```javascript
+let headersList = {
+ "Content-Type": "application/json",
+ "access-token": "<doctor access token>"
+}
+
+let bodyContent = JSON.stringify({
+  "day": 1,
+  "slot_start": "07:00:00",
+  "address": "lsdfj",
+  "medical_shop": "sdf",
+  "clinic_name": "sdfd",
+  "phone_no": "9812121212"
+});
+
+let response = await fetch("127.0.0.1:5000/schedule/", { 
+  method: "POST",
+  body: bodyContent,
+  headers: headersList
+});
+
+let data = await response.text();
+console.log(data);
+
+```
+
+#### Updating a schedule
+
+```http
+  PUT /schedule/<schedule id>
+```
+
+| Header Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `access-token` | `string` | **Required**. Doctor Access Token |
+
+**Information you can post**
+| JSON Body | Type     | Requirement                |
+| :-------- | :------- | :------------------------- |
+| `phone_no` | `string(max 10 size)` | **Optional**. If not provided then doctor's phone number will be taken |
+| `day` | `int(0 to 6)` | **Required**.It represents the days in a week in numeric form |
+| `specific_week` | `int(1,4)` | **Optional**. |
+| `slot_start` | `string(in HH:MM:DD format)` | **Required**. |
+| `slot_end` | `string(in HH:MM:DD format)` | **Optional**. |
+| `booking_start` | `int` | **Optional**.Represents how **days before** the booking will start |
+| `booking_end` | `int` | **Optional**. Represents how many **hours before** the booking will end|
+| `fees` | `int` | **Optional**. |
+| `address` | `string` | **Optional**. |
+| `clinic_name` | `string` |Out of clinic_name and medical_shop atleast one is Required|
+| `medical_shop` | `string` | Out of clinic_name and medical_shop atleast one is Required |
+
+- **Example**
+```javascript
+let headersList = {
+ "Content-Type": "application/json",
+ "access-token": "<doctor access token>"
+}
+
+let bodyContent = JSON.stringify({
+  "address":"dsdff",
+  "slot_start":"05:30:12"
+});
+
+let response = await fetch("127.0.0.1:5000/schedule/2", { 
+  method: "PUT",
+  body: bodyContent,
+  headers: headersList
+});
+
+let data = await response.text();
+console.log(data);
+
+```
+
+#### Deleting a schedule
+
+```http
+  DELETE /schedule/<schedule id>
+```
+
+| Header Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `access-token` | `string` | **Required**. Doctor Access Token |
+
+- **Example**
+```javascript
+let headersList = {
+ "access-token": "<doctor access token>"
+}
+
+let response = await fetch("127.0.0.1:5000/schedule/2", { 
+  method: "DELETE",
+  headers: headersList
+});
+
+let data = await response.text();
+console.log(data);
+
+```
