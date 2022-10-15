@@ -5,13 +5,13 @@ class AccountSchema(Schema):
         unknown = EXCLUDE # excluding the unknown field
     name = fields.Str(required=True)
     email = fields.Email(required=True)
-    phone_number = fields.Str(required=True,validate=validate.Length(equal=10),data_key="phone number")
-    referal_code = fields.Str(data_key="referal code")
-    reg_no = fields.Str(required=True,data_key="registration number")
+    phone_no = fields.Str(required=True,validate=validate.Length(equal=10))
+    reff_code = fields.Str(data_key="referal code")
+    reg_no = fields.Str(required=True)
     address = fields.Str(required=True)
     category = fields.Str(required=True)
     password = fields.Str(required=True)
-    profile_picture = fields.Raw(type="file",data_key="profile picture")
+    profile_pic = fields.Raw(type="file")
     
     @pre_load
     def check(self,data,**kwargs):
