@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from system.Config import Config
 from celery import Celery
+from flask_cors import CORS
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -10,6 +11,7 @@ celery = Celery(__name__,broker=Config.broker_url, result_backend=Config.result_
 
 def create_api():
     app = Flask(__name__)
+    CORS(app)
     app.config.from_object(Config)
     db.init_app(app)
     celery.conf.update(app.config)
