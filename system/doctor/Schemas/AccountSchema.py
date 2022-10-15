@@ -6,7 +6,7 @@ class AccountSchema(Schema):
     name = fields.Str(required=True)
     email = fields.Email(required=True)
     phone_no = fields.Str(required=True,validate=validate.Length(equal=10))
-    reff_code = fields.Str(data_key="referal code")
+    reff_code = fields.Str()
     reg_no = fields.Str(required=True)
     address = fields.Str(required=True)
     category = fields.Str(required=True)
