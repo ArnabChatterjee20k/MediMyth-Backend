@@ -23,6 +23,7 @@ def create_api():
     from system.doctor import doctor
     from system.Models.Doctor import Doctor
     from system.Models.ActiveDoctor import ActiveDoctor
+    # from system.Models.DoctorDetailsVisibility import DoctorDetailsVisibility
     app.register_blueprint(doctor,url_prefix="/doctor")
 
     from system.schedule import scheduler
