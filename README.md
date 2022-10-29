@@ -64,6 +64,9 @@ fetch('http://127.0.0.1:5000/otp/91XXXXXXXX', options)
 | `password` | `string` | **Required**. |
 | `profile_pic` | `file` | **Optional**. |
 | `reff_code` | `string(max 10 size)` | **Optional**. |
+| `email_visibility` | `Boolean` | **Optional**. Default is true |
+| `reg_no_visibility` | `Boolean` | **Optional**. Default is true |
+| `phone_no_visibility` | `Boolean` | **Optional**. Default is true |
 
 ```js
 const options = {
