@@ -12,3 +12,4 @@ class Config:
     result_backend = os.environ.get("redis_config")
     RESPONSE_KEY = "status"
     DOCTOR_TAG = "MM"
+    UTC_String_Format = r"%Y-%m-%d" # will be accepting utc string 

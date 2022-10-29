@@ -2,9 +2,11 @@ from enum import unique
 from system import db
 from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import datetime , date, timedelta
+from sqlalchemy.dialects.postgresql import DATE
 import calendar
 from system.Models.Schedule import Schedule
 from system.utils.get_next_date import get_next_date
+from system.utils.convert_str_to_date import convert_str_to_date
 class Appointment(db.Model):
     # this is for patients who will book to a schedule
     id = db.Column(db.Integer,primary_key = True)
@@ -15,6 +17,7 @@ class Appointment(db.Model):
     name = db.Column(db.String(30),nullable=False)
     contact_number = db.Column(db.String(10),nullable=False)##contact number of the patient
     age = db.Column(db.Integer,nullable=False)
+    appointment_date = db.Column(DATE(),nullable=False)
     date = db.Column(db.DateTime,default = datetime.utcnow)
 
     # @hybrid_property
@@ -23,15 +26,16 @@ class Appointment(db.Model):
 
 
     @classmethod
-    def check_booking(cls,id):
+    def check_booking(cls,id,appointment_date):
         schedule = Schedule.query.filter_by(id=id).first()
+        print(schedule)
         if not schedule:
             print(schedule)
             return False
         specific_week = schedule.specific_week
         if specific_week:
-            return cls.check_booking_start_specific_week(schedule,specific_week) and cls.check_booking_end_specific_week(schedule,specific_week)
-        return cls.check_booking_start(schedule) and cls.check_booking_end(schedule) and cls.check_limit(schedule)
+            return cls.check_booking_start_specific_week(schedule,specific_week) and cls.check_booking_end_specific_week(schedule,specific_week) and cls.check_limit(schedule,appointment_date)
+        return cls.check_booking_start(schedule) and cls.check_booking_end(schedule) and cls.check_limit(schedule,appointment_date)
     
     @classmethod
     def check_booking_start_specific_week(cls,schedule,specific_week):
@@ -94,11 +98,13 @@ class Appointment(db.Model):
         return datetime.now()<endtime
 
     @classmethod 
-    def check_limit(cls,schedule):
-        appointments = len(schedule.appointment_data)
+    def check_limit(cls,schedule,appointment_date):
+        schedule_id = schedule.id
+        appointment_date_obj = convert_str_to_date(appointment_date)
+        appointments = cls.query.filter(schedule_id==schedule_id,appointment_date==appointment_date_obj).count()
         limit = schedule.patient_limit
         print(appointments,limit)
-        if limit and appointments>limit:
+        if limit and appointments>=limit:
             return False
         return True
     

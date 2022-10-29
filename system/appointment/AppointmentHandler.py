@@ -22,7 +22,8 @@ class AppointmentHandler(Resource):
         exist = Appointment.query.filter_by(schedule_id=schedule_id,**data).first()
         if exist:
             return make_response({Config.RESPONSE_KEY:"already registered"},403)    
-        if Appointment.check_booking(schedule_id):
+        appointment_date = data.get("appointment_date")
+        if Appointment.check_booking(schedule_id,appointment_date):
             try:
                 appointment = Appointment(schedule_id=schedule_id,**data)
                 db.session.add(appointment)
