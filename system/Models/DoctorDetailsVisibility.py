@@ -10,6 +10,7 @@ class DoctorDetailsVisibility(db.Model):
     """
     id = db.Column(db.Integer,primary_key = True)
     doctor_id = db.Column(db.Integer,db.ForeignKey("doctor.id",onupdate="CASCADE",ondelete="CASCADE"),nullable=False)
-    email_visibility = db.Column(db.Boolean,default=default_value)
-    reg_no_visibility = db.Column(db.Boolean,default=default_value)
-    phone_no_visibility = db.Column(db.Boolean,default=True)
+    email = db.Column(db.Boolean,default=default_value)
+    reg_no = db.Column(db.Boolean,default=default_value)
+    phone_no = db.Column(db.Boolean,default=default_value)
+        

@@ -16,7 +16,7 @@ class Doctor(db.Model):
     active = db.Column(db.Boolean,default=False)
 
     active_id = db.relationship("ActiveDoctor",backref="active_id",lazy="dynamic",passive_deletes=True)
-    details_visible = db.relationship("DoctorDetailsVisibility",backref="details_visibility",lazy="dynamic",passive_deletes=True)
+    details_visible = db.relationship("DoctorDetailsVisibility",backref="details_visible",lazy="dynamic",passive_deletes=True)
     
     @property
     def password(self):

@@ -26,6 +26,9 @@ def create_api():
     # from system.Models.DoctorDetailsVisibility import DoctorDetailsVisibility
     app.register_blueprint(doctor,url_prefix="/doctor")
 
+    from system.Profile import profile
+    app.register_blueprint(profile,url_prefix="/profiles")
+
     from system.schedule import scheduler
     app.register_blueprint(scheduler,url_prefix="/schedule")
 
