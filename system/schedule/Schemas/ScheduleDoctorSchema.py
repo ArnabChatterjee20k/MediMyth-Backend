@@ -16,4 +16,4 @@ class ScheduleDoctorSchema(SQLAlchemyAutoSchema):
         model = Schedule
         ordered = True
     # must be same name as the relationship attribute between Schedule and Appointment Table
-    appointment_data = Nested(Appointmentschema,  many=True , only=("id","date"))
+    appointment_data = Nested(Appointmentschema,  many=True , only=("id","appointment_date"))

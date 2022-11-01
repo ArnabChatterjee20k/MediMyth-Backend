@@ -17,7 +17,7 @@ class Appointment(db.Model):
     name = db.Column(db.String(30),nullable=False)
     contact_number = db.Column(db.String(10),nullable=False)##contact number of the patient
     age = db.Column(db.Integer,nullable=False)
-    appointment_date = db.Column(DATE(),nullable=False)
+    appointment_date = db.Column(DATE(),nullable=False) ## this is only for the date in which we will meet the doctor. The booking start time and booking end time will be based on current date and time
     date = db.Column(db.DateTime,default = datetime.utcnow)
 
     # @hybrid_property
@@ -27,11 +27,7 @@ class Appointment(db.Model):
 
     @classmethod
     def check_booking(cls,id,appointment_date):
-        schedule = Schedule.query.filter_by(id=id).first()
-        print(schedule)
-        if not schedule:
-            print(schedule)
-            return False
+        schedule = Schedule.query.filter_by(id=id).first_or_404()
         specific_week = schedule.specific_week
         if specific_week:
             return cls.check_booking_start_specific_week(schedule,specific_week) and cls.check_booking_end_specific_week(schedule,specific_week) and cls.check_limit(schedule,appointment_date)
@@ -82,19 +78,20 @@ class Appointment(db.Model):
         scheduled_day = schedule.day
         today = datetime.strptime(date.today().strftime(r"%y-%m-%d"),r"%y-%m-%d")
         next_scheduled_day_date = datetime.strptime(get_next_date(scheduled_day),r"%y-%m-%d")
-
         delta = next_scheduled_day_date - today
-        return delta.days <= booking_start_day
+        print(delta.days)
+        # return delta.days <= booking_start_day
+        return False
     
     @classmethod
     def check_booking_end(cls,schedule):
         booking_end_time = schedule.booking_end
         slot_start = schedule.slot_start
         scheduled_day = schedule.day
+        print("booking end time",booking_end_time)
         next_scheduled_day_date = datetime.strptime(get_next_date(scheduled_day),r"%y-%m-%d")
         required_datetime = datetime.combine(next_scheduled_day_date,slot_start)
         endtime = required_datetime - timedelta(hours=booking_end_time)
-
         return datetime.now()<endtime
 
     @classmethod 
@@ -103,7 +100,6 @@ class Appointment(db.Model):
         appointment_date_obj = convert_str_to_date(appointment_date)
         appointments = cls.query.filter(schedule_id==schedule_id,appointment_date==appointment_date_obj).count()
         limit = schedule.patient_limit
-        print(appointments,limit)
         if limit and appointments>=limit:
             return False
         return True
