@@ -5,7 +5,7 @@ from system import db
 from system.Models.Doctor import Doctor
 from system.Models.Schedule import Schedule
 from system.schedule.utils.VerifySchedule import verify_schedule
-from system.schedule.Schemas.ScheduleDoctorSchema import ScheduleDoctorSchema
+from system.schedule.Schemas.ScheduleViewSchema import ScheduleDoctorSchema
 from system.utils.JWT import token_required
 from system.Config import Config
 

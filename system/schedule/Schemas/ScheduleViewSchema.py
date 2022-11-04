@@ -11,9 +11,17 @@ class Appointmentschema(SQLAlchemyAutoSchema):
         ordered = True
 
 
-class ScheduleDoctorSchema(SQLAlchemyAutoSchema):
+class SchedulePatientSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Schedule
         ordered = True
     # must be same name as the relationship attribute between Schedule and Appointment Table
     appointment_data = Nested(Appointmentschema,  many=True , only=("id","appointment_date"))
+
+
+class ScheduleDoctorSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Schedule
+        ordered = True
+    # must be same name as the relationship attribute between Schedule and Appointment Table
+    appointment_data = Nested(Appointmentschema,  many=True )

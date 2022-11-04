@@ -3,7 +3,6 @@ from flask import make_response , jsonify , request
 from system import db
 from system.Models.Doctor import Doctor
 from system.Models.Schedule import Schedule
-from system.schedule.Schemas.ScheduleDoctorSchema import ScheduleDoctorSchema
 from system.schedule.utils.VerifyScheduleUpdate import verify_update_schedule
 from system.utils.JWT import token_required
 from system.Config import Config
