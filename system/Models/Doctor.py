@@ -42,3 +42,11 @@ class Doctor(db.Model):
     def check_password(cls,password,email):
         doctor = Doctor.query.filter_by(email=email).first_or_404()
         return check_password_hash(doctor.password,password)
+    
+    @classmethod 
+    def get_doctor_fields(cls,data):
+        doctor_fields_to_pass = {}
+        for column in Doctor.__table__.columns.keys():
+            if(data.get(column)):
+                doctor_fields_to_pass[column] = data.get(column)
+        return doctor_fields_to_pass

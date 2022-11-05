@@ -15,10 +15,7 @@ class Registration(Resource):
         data = data.get("update")
         # data consists of many fields which we cant pass in the doctor schema
         # but data will surely contain columns which are present even in Doctor table
-        doctor_fields_to_pass = {}
-        for column in Doctor.__table__.columns.keys():
-            if(data.get(column)):
-                doctor_fields_to_pass[column] = data.get(column)
+        doctor_fields_to_pass = Doctor.get_doctor_fields(data)
 
         doctor = Doctor(**doctor_fields_to_pass)
         # doctor.name = data.get("name")
@@ -35,7 +32,7 @@ class Registration(Resource):
         reg_no_visibility = data.get("reg_no_visibility")
         phone_no_visibility = data.get("phone_no_visibility")
 
-        new_doctor_details_visibility = DoctorDetailsVisibility(email_visibility=email_visibility,reg_no_visibility=reg_no_visibility,phone_no_visibility=phone_no_visibility)
+        new_doctor_details_visibility = DoctorDetailsVisibility(email=email_visibility,reg_no=reg_no_visibility,phone_no=phone_no_visibility)
         try:
             db.session.add(doctor)
             db.session.flush()
