@@ -7,4 +7,4 @@ profile = Blueprint("doctor_profile_by_id",__name__)
 api = Api(profile)
 
 api.add_resource(DoctorProfileById,"/doctors/<int:id>") # for patients
-api.add_resource(DoctorProfileByEmail,"/doctors") # for doctors themseleves
+api.add_resource(DoctorProfileByEmail,"/doctors/myaccount") # for doctors themseleves
