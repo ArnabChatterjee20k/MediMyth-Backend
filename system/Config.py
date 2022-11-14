@@ -5,9 +5,9 @@ class Config:
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = "postgresql://postgres:arnab@localhost/medimyth"
     SQLALCHEMY_TRACK_MODIFICATIONS = True
-    TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
-    TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
-    TWILIO_SERVICE_ID = os.environ.get("TWILIO_SERVICE_ID")
+    TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID") or "none"
+    TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN") or "none"
+    TWILIO_SERVICE_ID = os.environ.get("TWILIO_SERVICE_ID") or "none"
     broker_url = os.environ.get("redis_config")
     result_backend = os.environ.get("redis_config")
     RESPONSE_KEY = "status"
