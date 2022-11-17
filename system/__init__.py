@@ -35,4 +35,7 @@ def create_api():
     from system.Models.Appointment import Appointment
     from system.appointment import appointment
     app.register_blueprint(appointment,url_prefix="/appointment")
+
+    from system.admin import doctor_handler
+    app.register_blueprint(doctor_handler,url_prefix="/admin")
     return app
