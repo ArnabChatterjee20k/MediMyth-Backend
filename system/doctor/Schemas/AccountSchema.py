@@ -13,9 +13,9 @@ class AccountSchema(Schema):
     password = fields.Str(required=True)
     profile_pic = fields.Raw(type="file")
     
-    email_visibility = fields.Bool(default=True)
-    reg_no_visibility = fields.Bool(default=True)
-    phone_no_visibility = fields.Bool(default=True)
+    email_visibility = fields.Bool()
+    reg_no_visibility = fields.Bool()
+    phone_no_visibility = fields.Bool()
     @pre_load
     def check(self,data,**kwargs):
         if(self.partial):

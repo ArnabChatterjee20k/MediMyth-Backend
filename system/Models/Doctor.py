@@ -15,8 +15,12 @@ class Doctor(db.Model):
     _password = db.Column(db.String)
     active = db.Column(db.Boolean,default=False)
 
+    email_visibility = db.Column(db.Boolean,default=True)
+    reg_no_visibility = db.Column(db.Boolean,default=True)
+    phone_no_visibility = db.Column(db.Boolean,default=True)
+
     active_id = db.relationship("ActiveDoctor",backref="active_id",lazy="dynamic",passive_deletes=True)
-    details_visible = db.relationship("DoctorDetailsVisibility",backref="details_visible",lazy="dynamic",passive_deletes=True)
+    
     
     @property
     def password(self):
@@ -44,11 +48,3 @@ class Doctor(db.Model):
     def check_password(cls,password,email):
         doctor = Doctor.query.filter_by(email=email).first_or_404()
         return check_password_hash(doctor.password,password)
-    
-    @classmethod 
-    def get_doctor_fields(cls,data):
-        doctor_fields_to_pass = {}
-        for column in Doctor.__table__.columns.keys():
-            if(data.get(column)):
-                doctor_fields_to_pass[column] = data.get(column)
-        return doctor_fields_to_pass

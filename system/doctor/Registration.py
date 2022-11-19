@@ -4,7 +4,6 @@ from system.doctor.utils.VerifyRegister import verify_register
 from system.utils.otp_required import otp_required
 from system import db
 from system.Models.Doctor import Doctor
-from system.Models.DoctorDetailsVisibility import DoctorDetailsVisibility
 from sqlalchemy.exc import IntegrityError
 from system.utils.JWT import generate_jwt
 from system.Config import Config
@@ -15,9 +14,8 @@ class Registration(Resource):
         data = data.get("update")
         # data consists of many fields which we cant pass in the doctor schema
         # but data will surely contain columns which are present even in Doctor table
-        doctor_fields_to_pass = Doctor.get_doctor_fields(data)
 
-        doctor = Doctor(**doctor_fields_to_pass)
+        doctor = Doctor(**data)
         # doctor.name = data.get("name")
         # doctor.phone_no = data.get("phone_no")
         doctor.email = data.get("email")
@@ -27,17 +25,9 @@ class Registration(Resource):
         # doctor.category = data.get("category")
         # doctor.reff_code = data.get("referal code")
         # doctor.profile_pic = data.get("profile picture")
-
-        email_visibility = data.get("email_visibility")
-        reg_no_visibility = data.get("reg_no_visibility")
-        phone_no_visibility = data.get("phone_no_visibility")
-
-        new_doctor_details_visibility = DoctorDetailsVisibility(email=email_visibility,reg_no=reg_no_visibility,phone_no=phone_no_visibility)
+        
         try:
             db.session.add(doctor)
-            db.session.flush()
-            new_doctor_details_visibility.doctor_id = doctor.id
-            db.session.add(new_doctor_details_visibility)
             db.session.commit()
             token = generate_jwt({"email":doctor.email})
             return jsonify({"token":token})

@@ -5,7 +5,6 @@ from system.doctor.utils.VerifyLogin import verify_login
 from system.doctor.utils.VerifyUpdate import verify_update
 from system.Models.Doctor import Doctor
 from system.utils.JWT import generate_jwt , token_required
-from system.Models.DoctorDetailsVisibility import DoctorDetailsVisibility
 from system import db
 from system.Config import Config
 class Account(Resource):
@@ -33,17 +32,9 @@ class Account(Resource):
         # Doctor().update_data(data.get("email"),update_data)
         doctor = Doctor.query.filter_by(email=email)
         doctor.first_or_404() ## for checking the existance
-        doctor_fields_to_pass = Doctor.get_doctor_fields(data)
 
-        email_visibility = update_data.get("email_visibility")
-        reg_no_visibility = update_data.get("reg_no_visibility")
-        phone_no_visibility = update_data.get("phone_no_visibility")
+        doctor.update(update_data)
 
-        visibility = doctor.first().details_visible
-
-        doctor.update(doctor_fields_to_pass)
-        visibility.update({"email":email_visibility,"reg_no" : reg_no_visibility , "phone_no" : phone_no_visibility})
-        
         db.session.commit()
         response = {Config.RESPONSE_KEY:"updated"}
         new_email = update_data.get("email")
