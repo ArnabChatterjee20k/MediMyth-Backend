@@ -17,9 +17,10 @@ def otp_required(function):
         try:
             if Config.PRODUCTION:
                 check(code=token,phone=phone_number)
-            return function(*args,**kwargs)
         except Exception as e:
             print(e)
             message = jsonify({Config.RESPONSE_KEY:"invlaid otp"})
             return make_response(message,400)
+        return function(*args,**kwargs)
+
     return inner
