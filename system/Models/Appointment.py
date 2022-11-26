@@ -79,9 +79,8 @@ class Appointment(db.Model):
         today = datetime.strptime(date.today().strftime(r"%y-%m-%d"),r"%y-%m-%d")
         next_scheduled_day_date = datetime.strptime(get_next_date(scheduled_day),r"%y-%m-%d")
         delta = next_scheduled_day_date - today
-        print(delta.days)
-        # return delta.days <= booking_start_day
-        return False
+        print("days",delta.days)
+        return delta.days <= booking_start_day
     
     @classmethod
     def check_booking_end(cls,schedule):
