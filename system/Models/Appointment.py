@@ -34,6 +34,7 @@ class Appointment(db.Model):
             "slot_start":schedule.slot_start,
             "req_specfic_week" : schedule.specific_week
         }
+        print(cls.check_limit(schedule,appointment_date))
         return cls.check_limit(schedule,appointment_date) and isInAppointmentRange(**params)
     
 
@@ -41,7 +42,7 @@ class Appointment(db.Model):
     def check_limit(cls,schedule,appointment_date):
         schedule_id = schedule.id
         appointment_date_obj = convert_str_to_date(appointment_date)
-        appointments = cls.query.filter(schedule_id==schedule_id,appointment_date==appointment_date_obj).count()
+        appointments = cls.query.filter(cls.schedule_id==schedule_id,cls.appointment_date==appointment_date_obj).count()
         limit = schedule.patient_limit
         if limit and appointments>=limit:
             return False
