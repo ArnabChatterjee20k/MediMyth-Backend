@@ -28,7 +28,7 @@ class Schedule(db.Model):
     address = db.Column(db.String,nullable=False)
 
     # appointments
-    appointment_data = db.relationship("Appointment",backref="appointment_data",passive_deletes=True)
+    appointment_data = db.relationship("Appointment",backref="appointment_data",cascade='all,delete',passive_deletes=True)
 
 
     def data_exists(self)->bool:
@@ -142,4 +142,4 @@ class Schedule(db.Model):
         print(patients)
         db.session.delete(schedule)
         db.session.commit()
-        return patients # so that they can be notified
+        # return patients # so that they can be notified

@@ -56,4 +56,5 @@ class ScheduleAccess(Resource):
         data = AppointmentDataSchema().dump(patients,many=True)
         body = f"Your schedule of id {schedule_id} is deleted"
         # send_bulk_sms.delay(data,body)
+        # send the bulk message before deleting the schedule in the check and delete as after delete we will not be able to acces that schedule
         return make_response({Config.RESPONSE_KEY:"deleted"},200)
