@@ -2,6 +2,7 @@ from system import db
 from werkzeug.security import check_password_hash , generate_password_hash
 from system.Models.ActiveDoctor import ActiveDoctor
 from system.Config import Config
+from system.SearchEngine.utils.upload_data import upload
 class Doctor(db.Model):
     id = db.Column(db.Integer,primary_key = True)
     name = db.Column(db.String(30),nullable=False)
@@ -42,6 +43,7 @@ class Doctor(db.Model):
         medimyth_doctor_id = f"{Config.DOCTOR_TAG}-{active_id}"
         new_active_doctor.active_doctor_id = f"{Config.DOCTOR_TAG}-{active_id}"
         db.session.commit()
+        upload(doctor_obj=doctor)
         return f"{Config.DOCTOR_TAG}-{active_id}"
     
     @classmethod

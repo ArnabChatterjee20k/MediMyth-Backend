@@ -10,6 +10,8 @@ class Config:
     TWILIO_SERVICE_ID = os.environ.get("TWILIO_SERVICE_ID") or "none"
     broker_url = os.environ.get("redis_config")
     result_backend = os.environ.get("redis_config")
+    ALGOLIA_APP_ID = os.environ.get("ALGOLIA_APP_ID")
+    ALOGOLIA_API_KEY_ADMIN = os.environ.get("ALOGOLIA_API_KEY_ADMIN")
     RESPONSE_KEY = "status"
     DOCTOR_TAG = "MM"
     UTC_String_Format = r"%Y-%m-%d" # will be accepting utc string 
