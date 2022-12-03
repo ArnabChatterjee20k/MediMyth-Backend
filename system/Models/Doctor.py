@@ -43,7 +43,7 @@ class Doctor(db.Model):
         medimyth_doctor_id = f"{Config.DOCTOR_TAG}-{active_id}"
         new_active_doctor.active_doctor_id = f"{Config.DOCTOR_TAG}-{active_id}"
         db.session.commit()
-        upload(doctor_obj=doctor)
+        upload(doctor_obj=doctor,active_id=active_id)
         return f"{Config.DOCTOR_TAG}-{active_id}"
     
     @classmethod
