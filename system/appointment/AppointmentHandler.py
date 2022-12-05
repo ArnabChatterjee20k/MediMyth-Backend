@@ -1,6 +1,6 @@
 from flask_restful import Resource
 from system import db
-from flask import make_response
+from flask import make_response , request
 from system.Models.Appointment import Appointment
 from system.Models.Schedule import Schedule
 from system.appointment.utils.verifyAppointmentData import verify_appointment
@@ -10,8 +10,13 @@ from system.Config import Config
 import traceback
 class AppointmentHandler(Resource):
     def get(self,schedule_id):
+        # if date is provided as a filter then we will use it to filter all the appointments in that date
+        appointment_date = request.args.get("date")
+        filter = {"schedule_id":schedule_id}
+        if appointment_date:
+            filter["appointment_date"] = appointment_date
         schema = AppointmentDataSchema()
-        data = Appointment.query.filter_by(schedule_id=schedule_id).all()
+        data = Appointment.query.filter_by(**filter).all()
         ## if schedule not exist then empty array
         return schema.dump(data,many=True)
 
