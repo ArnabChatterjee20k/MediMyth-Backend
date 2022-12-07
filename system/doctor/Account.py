@@ -7,6 +7,8 @@ from system.Models.Doctor import Doctor
 from system.utils.JWT import generate_jwt , token_required
 from system import db
 from system.Config import Config
+from psycopg2.errors import UniqueViolation
+from sqlalchemy.exc import IntegrityError
 class Account(Resource):
     @verify_login
     def get(self,**data):
@@ -32,14 +34,12 @@ class Account(Resource):
         # Doctor().update_data(data.get("email"),update_data)
         doctor = Doctor.query.filter_by(email=email)
         doctor.first_or_404() ## for checking the existance
-
-        doctor.update(update_data)
-
+        try:
+            doctor.update(update_data)
+        except IntegrityError as e:
+            return make_response({Config.RESPONSE_KEY:"Email or Registration Number already exists"},400)
         db.session.commit()
-        response = {Config.RESPONSE_KEY:"updated"}
-        new_email = update_data.get("email")
-        if new_email:
-            response["token"] = generate_jwt({"email":new_email})            
+        response = {Config.RESPONSE_KEY:"success"}
         return make_response(response,200) #to generate the response with the new email if email updated else status
     
     @token_required
