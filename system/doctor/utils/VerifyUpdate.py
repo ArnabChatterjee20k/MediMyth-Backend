@@ -7,7 +7,7 @@ def verify_update(function):
     @wraps(function)
     def inner(*args,**kwargs):
         data = request.json
-        schema = AccountSchema(partial=True)
+        schema = AccountSchema(partial=True,exclude=("password",))
         try:
             result = schema.load(data)
             kwargs.update({"update":result})
