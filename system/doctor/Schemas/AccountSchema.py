@@ -11,7 +11,7 @@ class AccountSchema(Schema):
     address = fields.Str(required=True)
     category = fields.Str(required=True)
     password = fields.Str(required=True)
-    profile_pic = fields.Raw(type="file")
+    profile_pic = fields.Raw(type="file",allow_none=True)
     
     email_visibility = fields.Bool()
     reg_no_visibility = fields.Bool()
