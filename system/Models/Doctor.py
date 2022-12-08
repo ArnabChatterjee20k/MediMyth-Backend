@@ -12,6 +12,7 @@ class Doctor(db.Model):
     address = db.Column(db.String,nullable=False)
     reg_no = db.Column(db.String(20),nullable=False,unique=True)
     category = db.Column(db.String(20),nullable=False)
+    description = db.Column(db.String)
     profile_pic = db.Column(db.String,default=None)
     _password = db.Column(db.String)
     active = db.Column(db.Boolean,default=False)

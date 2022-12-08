@@ -10,6 +10,7 @@ class AccountSchema(Schema):
     reg_no = fields.Str(required=True)
     address = fields.Str(required=True)
     category = fields.Str(required=True)
+    description = fields.Str(allow_none=True)
     password = fields.Str(required=True)
     profile_pic = fields.Raw(type="file",allow_none=True)
     
