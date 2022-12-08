@@ -1,4 +1,3 @@
-import email
 from flask_restful import Resource
 from flask import make_response
 from system.doctor.utils.VerifyLogin import verify_login
@@ -7,7 +6,6 @@ from system.Models.Doctor import Doctor
 from system.utils.JWT import generate_jwt , token_required
 from system import db
 from system.Config import Config
-from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import IntegrityError
 class Account(Resource):
     @verify_login
