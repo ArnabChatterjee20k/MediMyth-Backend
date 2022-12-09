@@ -143,3 +143,7 @@ class Schedule(db.Model):
         db.session.delete(schedule)
         db.session.commit()
         # return patients # so that they can be notified
+
+    @classmethod 
+    def get_schedules_by_ids(cls,id_list):
+        return Schedule.query.filter(Schedule.id.in_(id_list)).all()
