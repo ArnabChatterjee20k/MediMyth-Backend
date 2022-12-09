@@ -29,3 +29,5 @@ class VacationHandler(Resource):
         if(exist):
             return make_response({Config.RESPONSE_KEY:"vacation exist"},403)
         Vacation.create_vacation(active_doctor_id=doctor_id,**vacation_details)
+
+        return make_response({Config.RESPONSE_KEY:"success"})
