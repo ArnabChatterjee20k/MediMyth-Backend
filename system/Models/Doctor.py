@@ -21,7 +21,7 @@ class Doctor(db.Model):
     reg_no_visibility = db.Column(db.Boolean,default=True)
     phone_no_visibility = db.Column(db.Boolean,default=True)
 
-    active_id = db.relationship("ActiveDoctor",backref="active_id",lazy="dynamic",passive_deletes=True)
+    active_id = db.relationship("ActiveDoctor",backref="active_id",lazy="dynamic",cascade='all,delete',passive_deletes=True)
     
     
     @property

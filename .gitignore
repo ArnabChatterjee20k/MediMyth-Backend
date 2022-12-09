@@ -4,3 +4,4 @@ migrations/*
 .vscode
 test.ipynb
 test.*
+*.test.py

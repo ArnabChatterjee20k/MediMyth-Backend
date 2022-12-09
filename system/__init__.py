@@ -16,7 +16,7 @@ def create_api():
     db.init_app(app)
     celery.conf.update(app.config)
     migrate.init_app(app,db)
-    
+        
     from system.otp import otp
     app.register_blueprint(otp,url_prefix="/otp")
 
@@ -24,6 +24,11 @@ def create_api():
     from system.Models.Doctor import Doctor
     from system.Models.ActiveDoctor import ActiveDoctor
     app.register_blueprint(doctor,url_prefix="/doctor")
+
+    from system.Vacation import vacation
+    from system.Models.ScheduleVacation import schedule_vacation
+    from system.Models.Vacation import Vacation
+    app.register_blueprint(vacation,url_prefix="/vacation")
 
     from system.Profile import profile
     app.register_blueprint(profile,url_prefix="/profiles")
@@ -35,10 +40,12 @@ def create_api():
     from system.appointment import appointment
     app.register_blueprint(appointment,url_prefix="/appointment")
 
+
     from system.category import category
     from system.Models.Category import Category
     app.register_blueprint(category,url_prefix="/category")
 
     from system.admin import doctor_handler
     app.register_blueprint(doctor_handler,url_prefix="/admin")
+    
     return app
