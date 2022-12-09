@@ -51,3 +51,15 @@ def valid_specific_week(provided_date, req_weekday, req_specfic_week=None):
     week = month_days[req_specfic_week - 1]
     parsed_provided_date_day = parsed_provided_date.day
     return week[req_weekday] == parsed_provided_date_day
+
+def get_weekdays_between_dates(start,end):
+    data=[]
+    parsed_start = parse_date(start)
+    parsed_end = parse_date(end)
+
+    cur = parsed_start
+
+    while cur<parsed_end:
+        data.append(get_week_day(cur))
+        cur+=timedelta(days=1)
+    return list(set(data))

@@ -3,6 +3,7 @@ from system.Models.Doctor import Doctor
 from system.Models.ActiveDoctor import ActiveDoctor
 from sqlalchemy.dialects.postgresql import TIME
 from sqlalchemy import or_ , and_ 
+from system.utils.datetime_fns import get_weekdays_between_dates
 class Schedule(db.Model):
     id = db.Column(db.Integer,primary_key = True)
     active_doctor_id = db.Column(db.Integer,db.ForeignKey("active_doctor.id",onupdate="CASCADE",ondelete="CASCADE"),nullable=False)
@@ -147,3 +148,8 @@ class Schedule(db.Model):
     @classmethod 
     def get_schedules_by_ids(cls,id_list):
         return Schedule.query.filter(Schedule.id.in_(id_list)).all()
+    
+    @classmethod
+    def get_schedules_between_dates(cls,active_doctor_id,start,end):
+        range = get_weekdays_between_dates(start,end)
+        return Schedule.query.filter(Schedule.active_doctor_id==active_doctor_id,Schedule.day.in_(range)).all()

@@ -56,5 +56,13 @@ class Scheduler(Resource):
         doctor_id = doctor.active_id.first().id
 
         schema = ScheduleDoctorSchema()
+        
+        query = request.args
+        start = query.get("start") 
+        end = query.get("end")
+        if start and end :
+            data = Schedule.get_schedules_between_dates(active_doctor_id=doctor_id,start=start,end=end)
+            return jsonify((schema.dump(data,many=True)))
+
         data = Schedule.query.filter_by(active_doctor_id=doctor_id).all()
         return jsonify((schema.dump(data,many=True)))

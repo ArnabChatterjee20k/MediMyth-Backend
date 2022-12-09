@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy.dialects.postgresql import DATE
 from system.Models.Schedule import Schedule
 from system.utils.convert_str_to_date import convert_str_to_date
-from system.utils.isInAppointmentRange import isInAppointmentRange
+from system.utils.datetime_fns import isInAppointmentRange
 
 class Appointment(db.Model):
     # this is for patients who will book to a schedule
