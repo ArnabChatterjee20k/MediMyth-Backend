@@ -5,6 +5,7 @@ from sqlalchemy.dialects.postgresql import TIME
 from sqlalchemy import or_ , and_ 
 from system.utils.datetime_fns import get_weekdays_between_dates
 class Schedule(db.Model):
+    """For checking if data exists in the database in the schedule using data exists function"""
     id = db.Column(db.Integer,primary_key = True)
     active_doctor_id = db.Column(db.Integer,db.ForeignKey("active_doctor.id",onupdate="CASCADE",ondelete="CASCADE"),nullable=False)
     phone_no = db.Column(db.String,nullable=False)
@@ -34,7 +35,7 @@ class Schedule(db.Model):
 
     def data_exists(self)->bool:
         search_params = {}
-        required_cols_to_be_checked = ["slot_start","slot_end","day"]
+        required_cols_to_be_checked = ["slot_start", "slot_end", "day","specific_week"]
         column_attributes = self.__table__.columns.keys()
         # getting common values/intersection using set
         keys = set(required_cols_to_be_checked).intersection(set(column_attributes))
@@ -42,11 +43,6 @@ class Schedule(db.Model):
             data = getattr(self,col_name,None)
             if(data!=None):
                 search_params[col_name] = data
-        print(self.day)
-        print(self.id)
-        print(keys)
-        print("0th-> ",Schedule.query.filter(Schedule.id!=self.id).filter_by(**search_params).first())
-        print(Schedule.query.filter(Schedule.id!=self.id).filter_by(**search_params))
         return bool(Schedule.query.filter(Schedule.id!=self.id).filter_by(**search_params).first())
     
     def get_slot_start(self):
