@@ -5,7 +5,6 @@ from sqlalchemy.dialects.postgresql import TIME
 from sqlalchemy import or_, and_
 from system.utils.datetime_fns import get_weekdays_between_dates
 
-
 class Schedule(db.Model):
     """For checking if data exists in the database in the schedule using data exists function"""
     id = db.Column(db.Integer, primary_key=True)
@@ -40,6 +39,34 @@ class Schedule(db.Model):
     appointment_data = db.relationship(
         "Appointment", backref="appointment_data", cascade='all,delete', passive_deletes=True)
 
+    @classmethod
+    def create_schedule(cls,data):
+        weeks = data.get("specific_week")
+        day = data.get("day")
+        
+        schedules_array = []
+        errors = {}
+        error_exist = False
+        for week in weeks:
+            for each_day in day:
+                data["specific_week"] = week
+                data["day"] = each_day
+                schedule = Schedule(**data)
+                # if schedule already exists
+                if(schedule.check_slot() or schedule.data_exists()):
+                    error_exist = True
+                    error_week = week if week!=None else "everyweek"
+                    if errors.get(error_week):
+                        errors[error_week].append(each_day)
+                    else:
+                        errors[error_week] = [each_day]
+                else:
+                    schedules_array.append(schedule)
+        
+        db.session.add_all(schedules_array)
+        db.session.commit()
+        return (error_exist,errors)
+        
     def data_exists(self) -> bool:
         search_params = {}
         required_cols_to_be_checked = [

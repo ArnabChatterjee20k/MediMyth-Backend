@@ -8,7 +8,7 @@ from system.schedule.utils.VerifySchedule import verify_schedule
 from system.schedule.Schemas.ScheduleViewSchema import ScheduleDoctorSchema
 from system.utils.JWT import token_required
 from system.Config import Config
-
+import sys
 class Scheduler(Resource):
     """This is for doctor"""
     @verify_schedule
@@ -32,17 +32,17 @@ class Scheduler(Resource):
         if not required_data.get("phone_no"):
             required_data["phone_no"] = doctor.phone_no
 
-        schedule = Schedule(**required_data)
-
-        # if schedule already exists
-        if(schedule.check_slot() or schedule.data_exists()):
-            return make_response({Config.RESPONSE_KEY:"schedule already exists in this time"},403)
 
         try:
-            db.session.add(schedule)
-            db.session.commit()       
+            error_exist,errors = Schedule.create_schedule(required_data)       
+            if(error_exist):
+                return errors,403
             return make_response({Config.RESPONSE_KEY:"success"},200)   
         except Exception as e:
+            print(e)
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            print(exc_type, exc_tb.tb_lineno)
+
             return make_response({Config.RESPONSE_KEY:"internal server error"},500)
 
     @token_required
