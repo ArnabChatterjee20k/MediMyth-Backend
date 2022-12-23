@@ -36,7 +36,7 @@ class Scheduler(Resource):
         try:
             error_exist,errors = Schedule.create_schedule(required_data)       
             if(error_exist):
-                return errors,403
+                return {Config.RESPONSE_KEY:errors},403
             return make_response({Config.RESPONSE_KEY:"success"},200)   
         except Exception as e:
             print(e)
