@@ -38,13 +38,12 @@ class Appointment(db.Model):
             "slot_start": schedule.slot_start,
             "req_specfic_week": schedule.specific_week
         }
-        print(cls.check_limit(schedule, appointment_date))
-        return cls.check_limit(schedule, appointment_date) and isInAppointmentRange(**params)
+        # print(isInAppointmentRange(**params))
+        return cls.check_limit(schedule, appointment_date) and isInAppointmentRange(**params) , schedule
 
     @classmethod
     def check_vacation(cls, id, appointment_date):
-        print(appointment_date)
-        print(Schedule.query.join(Schedule.vacation).filter(Schedule.id == id, Vacation.start <= appointment_date, Vacation.end >= appointment_date).first())
+        print("vacation",Schedule.query.join(Schedule.vacation).filter(Schedule.id == id, Vacation.start <= appointment_date, Vacation.end >= appointment_date).first())
         return Schedule.query.join(Schedule.vacation).filter(Schedule.id == id, Vacation.start <= appointment_date, Vacation.end >= appointment_date).first()
 
     @classmethod
