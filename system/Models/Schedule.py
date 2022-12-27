@@ -4,6 +4,7 @@ from system.Models.ActiveDoctor import ActiveDoctor
 from sqlalchemy.dialects.postgresql import TIME
 from sqlalchemy import or_, and_
 from system.utils.datetime_fns import get_weekdays_between_dates
+from system.utils.notify_patients import deleted_schedule
 
 class Schedule(db.Model):
     """For checking if data exists in the database in the schedule using data exists function"""
@@ -182,10 +183,10 @@ class Schedule(db.Model):
         schedule = cls.check_schedule(
             active_doctor_id=active_doctor_id, schedule_id=id).first()
         patients = schedule.appointment_data
-        print(patients)
+        for i in patients:
+            deleted_schedule.delay(name=i.name,phone=i.contact_number,appointment_date=i.appointment_date,appointment_id=i.appointment_id)
         db.session.delete(schedule)
         db.session.commit()
-        # return patients # so that they can be notified
 
     @classmethod
     def get_schedules_by_ids(cls, id_list):
