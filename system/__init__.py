@@ -48,6 +48,4 @@ def create_api():
     from system.admin import doctor_handler
     app.register_blueprint(doctor_handler,url_prefix="/admin")
     
-    from system.reset_password import reset_password
-    app.register_blueprint(reset_password,url_prefix="/password")
     return app

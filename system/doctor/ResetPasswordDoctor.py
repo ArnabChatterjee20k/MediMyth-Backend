@@ -7,10 +7,10 @@ from system.utils.JWT import token_required
 from system.Config import Config
 from system import db
 
-class ResetPassword(Resource):
+class ResetPasswordDoctor(Resource):
     @otp_required
     @token_required
-    def post(self, **data):
+    def put(self, **data):
         # checking phone number present or valid or not will be done otp required iteself
         provided_phone = request.args.get("phone")
         email = data.get("email")
@@ -29,3 +29,5 @@ class ResetPassword(Resource):
 
         doctor_exist.password = new_password
         db.session.commit()
+
+        return {Config.RESPONSE_KEY:"Password Updated"}
