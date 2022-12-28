@@ -9,12 +9,14 @@ from system import db
 
 class ResetPasswordDoctor(Resource):
     @otp_required
-    @token_required
-    def put(self, **data):
+    def put(self):
         # checking phone number present or valid or not will be done otp required iteself
         provided_phone = request.args.get("phone")
-        email = data.get("email")
+        email = request.json.get("email")
         new_password = request.json.get("password")
+
+        if not email:
+            return {Config.RESPONSE_KEY:"Email not provided"},403
 
         if not new_password:
             abort(403)
