@@ -5,7 +5,8 @@ def upload_s3(file):
     service = AWS("s3")
     s3 = service.client
     _ , f_ext = os.path.splitext(file.filename)
-    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+    ALLOWED_EXTENSIONS = {'.png', '.jpg', '.jpeg'}
+
     if f_ext.lower() not in ALLOWED_EXTENSIONS:
         return None
     filename = f"{uuid.uuid4()}.{f_ext}"
