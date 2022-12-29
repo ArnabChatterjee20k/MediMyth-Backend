@@ -19,7 +19,8 @@ class ResetPasswordDoctor(Resource):
             return {Config.RESPONSE_KEY:"Email not provided"},403
 
         if not new_password:
-            abort(403)
+            print(new_password)
+            return {Config.RESPONSE_KEY:"New Password Not Provided"},403
 
         doctor = Doctor.query.join(ActiveDoctor).filter(
             Doctor.email == email)
@@ -27,7 +28,7 @@ class ResetPasswordDoctor(Resource):
         actual_phone = doctor_exist.phone_no
 
         if int(actual_phone) != int(provided_phone):
-            abort(403)
+            return {Config.RESPONSE_KEY:"Please Enter Your Registered Phone Number"},403
 
         doctor_exist.password = new_password
         db.session.commit()
