@@ -18,7 +18,8 @@ class UploadPicture(Resource):
         email = data.get("email")
         doctor = Doctor.query.join(ActiveDoctor).filter(
             Doctor.email == email).first_or_404()
-        filename = upload_s3(file)
+        doctor_profile_pic_exists = doctor.profile_pic
+        filename = upload_s3(file, name=doctor_profile_pic_exists)
         if filename == None:
             return {Config.RESPONSE_KEY: "File Format Not Supported"}, 403
         doctor.profile_pic = filename
