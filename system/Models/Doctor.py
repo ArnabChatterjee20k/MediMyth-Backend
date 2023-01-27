@@ -1,8 +1,7 @@
 from system import db
 from werkzeug.security import check_password_hash , generate_password_hash
 from system.Models.ActiveDoctor import ActiveDoctor
-from system.Config import Config
-from system.SearchEngine.utils.upload_data import upload
+from system.utils.set_active import set_active
 class Doctor(db.Model):
     id = db.Column(db.Integer,primary_key = True)
     name = db.Column(db.String(30),nullable=False)
@@ -34,18 +33,13 @@ class Doctor(db.Model):
 
     @classmethod
     def set_active(cls,id):
-        doctor = Doctor.query.filter_by(id=id).first_or_404()
-        doctor.active = True
-        new_active_doctor = ActiveDoctor(doctor_id=id)
-        db.session.add(new_active_doctor)
-        # flushing the object to the database to access it's id before adding to the database
-        db.session.flush()
-        active_id = new_active_doctor.id
-        medimyth_doctor_id = f"{Config.DOCTOR_TAG}-{active_id}"
-        new_active_doctor.active_doctor_id = f"{Config.DOCTOR_TAG}-{active_id}"
-        db.session.commit()
-        upload(doctor_obj=doctor,active_id=active_id)
-        return f"{Config.DOCTOR_TAG}-{active_id}"
+        return set_active(
+            model=Doctor,
+            id=id,
+            ActiveModel=ActiveDoctor,
+            ActiveModelRelationId="doctor_id",
+            active_field="active_doctor_id"
+        )
     
     @classmethod
     def check_password(cls,password,email):

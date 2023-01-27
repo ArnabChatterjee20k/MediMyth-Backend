@@ -22,5 +22,5 @@ class Config:
     AWS_S3_BUCKET = "mmdoctorbucket"
 
     RESPONSE_KEY = "status"
-    DOCTOR_TAG = "MM"
+    ACTIVE_TAG = "MM"
     UTC_String_Format = r"%Y-%m-%d" # will be accepting utc string 
