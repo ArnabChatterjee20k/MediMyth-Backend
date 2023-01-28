@@ -4,7 +4,7 @@ from system.SearchEngine.utils.upload_data import upload
 
 
 def set_active(model,id,ActiveModel,ActiveModelRelationId,active_field):
-    doctor = model.query.filter_by(id=id).first_or_404()
+    model_obj = model.query.filter_by(id=id).first_or_404()
     
     new_active_obj = ActiveModel()
     setattr(new_active_obj,ActiveModelRelationId,id)
@@ -18,5 +18,4 @@ def set_active(model,id,ActiveModel,ActiveModelRelationId,active_field):
     setattr(new_active_obj,active_field,medimyth_active_id)
     db.session.commit()
     
-    upload(doctor_obj=doctor, active_id=active_id)
-    return medimyth_active_id
+    return model_obj,medimyth_active_id,active_id
