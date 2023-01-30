@@ -16,6 +16,10 @@ def parse_date(provided_date):
     return datetime.strptime(provided_date, Config.UTC_String_Format)
 
 def get_week_day(parsed_date):
+    """
+        returns -> value from 0 to 6 based on date
+        .day of date object give us the date but we need week that is from 0 to 6
+    """
     output_week = parsed_date.weekday()
     return  output_week+1 if(output_week>=0 and output_week<6) else 0
 
@@ -26,6 +30,7 @@ def is_valid_provided_date(provided_date, scheduled_day):
 
 
 def after_booking_starts(provided_date, starting_day):
+    # if the provided date is valid then the difference betweent the provided date and today should be <=starting day
     today = datetime.today()
     parsed_provided_date = parse_date(provided_date)
     delta = parsed_provided_date - today
