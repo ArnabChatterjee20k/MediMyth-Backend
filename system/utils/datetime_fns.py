@@ -30,7 +30,9 @@ def is_valid_provided_date(provided_date, scheduled_day):
 
 
 def after_booking_starts(provided_date, starting_day):
+    # use valid date function before using it
     # if the provided date is valid then the difference betweent the provided date and today should be <=starting day
+    # to check whether we are apply after the slot or scheduled day use before booking end function
     today = datetime.today()
     parsed_provided_date = parse_date(provided_date)
     delta = parsed_provided_date - today
@@ -39,6 +41,7 @@ def after_booking_starts(provided_date, starting_day):
 
 
 def before_booking_ends(provided_date, end_hour , slot_start):
+    # use valid date function before using it
     parsed_provided_date = parse_date(provided_date)
     parsed_provided_date = datetime.combine(parsed_provided_date,slot_start)
     difference_time = parsed_provided_date - timedelta(hours=end_hour)
