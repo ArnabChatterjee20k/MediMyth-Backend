@@ -5,3 +5,5 @@ migrations/*
 test.ipynb
 test.*
 *.test.py
+tests/
+.env

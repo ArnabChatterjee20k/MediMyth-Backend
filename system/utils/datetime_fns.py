@@ -4,6 +4,12 @@ import calendar
 
 
 def isInAppointmentRange(provided_date, slot_start , scheduled_day, starting_day, end_hour, req_specfic_week=None):
+    print(
+        is_valid_provided_date(provided_date, scheduled_day) ,
+        valid_specific_week(provided_date, scheduled_day, req_specfic_week) ,
+        after_booking_starts(provided_date, starting_day) ,
+        before_booking_ends(provided_date, end_hour , slot_start)
+    )
     return (
         is_valid_provided_date(provided_date, scheduled_day) and
         valid_specific_week(provided_date, scheduled_day, req_specfic_week) and
@@ -45,12 +51,18 @@ def before_booking_ends(provided_date, end_hour , slot_start):
     parsed_provided_date = parse_date(provided_date)
     parsed_provided_date = datetime.combine(parsed_provided_date,slot_start)
     difference_time = parsed_provided_date - timedelta(hours=end_hour)
+    print(difference_time,"and",datetime.now(),"and",datetime.now() < difference_time)
     return datetime.now() < difference_time
 
 
 def valid_specific_week(provided_date, req_weekday, req_specfic_week=None):
+    """
+        provided_date is the appointment date that the user picks
+        req_weekday is the week day that is specific week present in the schema
+    """
     if (req_specfic_week == None):
         return True
+    # print(provided_date, req_weekday)
     parsed_provided_date = parse_date(provided_date)
     calendar.setfirstweekday(calendar.SUNDAY)
     month = parsed_provided_date.month
@@ -58,6 +70,7 @@ def valid_specific_week(provided_date, req_weekday, req_specfic_week=None):
     month_days = calendar.monthcalendar(year, month)
     week = month_days[req_specfic_week - 1]
     parsed_provided_date_day = parsed_provided_date.day
+    print(parsed_provided_date.day,parsed_provided_date_day,week[req_weekday],req_weekday)
     return week[req_weekday] == parsed_provided_date_day
 
 def get_weekdays_between_dates(start,end):

@@ -6,8 +6,9 @@ class OTP(Resource):
     """For sending otp verification can be done by importing verifyOTP"""
     def get(self,phone):
         try:
-            if(not Config.PRODUCTION):
+            if(Config.PRODUCTION):
                 send_sms.delay(phone)
             return {Config.RESPONSE_KEY : "success"}
-        except:
+        except Exception as e:
+            print(e)
             return abort(400)

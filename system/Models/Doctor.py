@@ -4,6 +4,7 @@ from system.Models.ActiveDoctor import ActiveDoctor
 from system.utils.set_active import set_active
 from system.SearchEngine.utils.upload_data import upload
 from system.AWS_Services.send_email import send_email
+from system.Config import Config
 class Doctor(db.Model):
     id = db.Column(db.Integer,primary_key = True)
     name = db.Column(db.String(30),nullable=False)
@@ -42,13 +43,14 @@ class Doctor(db.Model):
             ActiveModelRelationId="doctor_id",
             active_field="active_doctor_id"
         )
-        upload(doctor_obj=doctor, active_id=active_id)
-        send_email.delay(
-            recipient=doctor.email,
-            sender="Info.medimyth@gmail.com",
-            subject="Activation Successful",
-            body="Thank You For Applying At MediMyth. We have verified and check all the details.\nNow Your Account Is Active!\nGo to our website and login"
-        )
+        print(upload(doctor_obj=doctor, active_id=active_id))
+        if Config.PRODUCTION:
+            send_email.delay(
+                recipient=doctor.email,
+                sender="Info.medimyth@gmail.com",
+                subject="Activation Successful",
+                body="Thank You For Applying At MediMyth. We have verified and check all the details.\nNow Your Account Is Active!\nGo to our website and login"
+            )
         return medimyth_active_id
     
     @classmethod

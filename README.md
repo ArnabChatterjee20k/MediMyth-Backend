@@ -33,7 +33,7 @@ const options = {method: 'GET'};
 
 fetch('http://127.0.0.1:5000/otp/91XXXXXXXX', options)
   .then(response => response.json())
-  .then(response => console.log(response))
+  .then(response => // console.log(response))
   .catch(err => console.error(err));
 ```
 
@@ -77,7 +77,7 @@ const options = {
 
 fetch('http://127.0.0.1:5000/doctor/register?phone=91XXXXXXXX', options)
   .then(response => response.json())
-  .then(response => console.log(response))
+  .then(response => // console.log(response))
   .catch(err => console.error(err));
 ```
 * returns -
@@ -102,7 +102,7 @@ const options = {method: 'GET'};
 
 fetch('http://127.0.0.1:5000/doctor/?email=home.hu.1%40gmail.com&password=1212', options)
   .then(response => response.json())
-  .then(response => console.log(response))
+  .then(response => // console.log(response))
   .catch(err => console.error(err));
 ```
 
@@ -131,7 +131,7 @@ const options = {
 
 fetch('http://127.0.0.1:5000/doctor/', options)
   .then(response => response.json())
-  .then(response => console.log(response))
+  .then(response => // console.log(response))
   .catch(err => console.error(err));
 ```
 
@@ -172,7 +172,7 @@ const options = {
 
 fetch('http://127.0.0.1:5000/doctor/', options)
   .then(response => response.json())
-  .then(response => console.log(response))
+  .then(response => // console.log(response))
   .catch(err => console.error(err));
 ```
 
@@ -209,7 +209,7 @@ let response = await fetch("/schedule", {
 });
 
 let data = await response.text();
-console.log(data);
+// console.log(data);
 ```
 
 #### Create a schedule
@@ -260,7 +260,7 @@ let response = await fetch("127.0.0.1:5000/schedule/", {
 });
 
 let data = await response.text();
-console.log(data);
+// console.log(data);
 
 ```
 
@@ -308,7 +308,7 @@ let response = await fetch("127.0.0.1:5000/schedule/2", {
 });
 
 let data = await response.text();
-console.log(data);
+// console.log(data);
 
 ```
 
@@ -334,7 +334,7 @@ let response = await fetch("127.0.0.1:5000/schedule/2", {
 });
 
 let data = await response.text();
-console.log(data);
+// console.log(data);
 
 ```
 
@@ -359,7 +359,7 @@ let response = await fetch("127.0.0.1:5000/appointment/1", {
 });
 
 let data = await response.text();
-console.log(data);
+// console.log(data);
 
 ```
 
@@ -406,6 +406,6 @@ let response = await fetch("127.0.0.1:5000/appointment/1?phone=123456789", {
 });
 
 let data = await response.text();
-console.log(data);
+// console.log(data);
 
 ```

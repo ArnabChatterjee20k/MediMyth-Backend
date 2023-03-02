@@ -38,7 +38,7 @@ class Appointment(db.Model):
             "slot_start": schedule.slot_start,
             "req_specfic_week": schedule.specific_week
         }
-        # print(isInAppointmentRange(**params))
+        print(isInAppointmentRange(**params))
         return cls.check_limit(schedule, appointment_date) and isInAppointmentRange(**params) , schedule
 
     @classmethod

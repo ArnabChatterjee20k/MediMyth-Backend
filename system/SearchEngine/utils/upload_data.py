@@ -1,5 +1,5 @@
 from system.SearchEngine.client import connect_to_algolia_client
-
+from system.Config import Config
 def upload(doctor_obj,active_id):
     client = connect_to_algolia_client()
 
@@ -13,5 +13,5 @@ def upload(doctor_obj,active_id):
             record[col_name] = getattr(doctor_obj,col_name)
     
 
-    index = client.init_index("medimyth")
+    index = client.init_index(Config.ALGOLIA_INDEX)
     index.save_object(record,{'autoGenerateObjectIDIfNotExist': True})

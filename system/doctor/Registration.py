@@ -32,20 +32,21 @@ class Registration(Resource):
             db.session.add(doctor)
             db.session.commit()
             token = generate_jwt({"email": doctor.email})
-            send_email.delay(
-                sender=doctor.email,
-                recipient="Info.medimyth@gmail.com",
-                subject="Activation Request",
-                body=f"""
-                    name :{doctor.name}
-                    email : {doctor.email}
-                    phone number : {doctor.phone_no}
-                    registration number : {doctor.reg_no}
-                    category : {doctor.category}
-                    other description : {doctor.description if doctor.description else "Not Provided"}
-                    address: {doctor.address}
-                    """
-            )
+            if Config.PRODUCTION:
+                send_email.delay(
+                    sender=doctor.email,
+                    recipient="Info.medimyth@gmail.com",
+                    subject="Activation Request",
+                    body=f"""
+                        name :{doctor.name}
+                        email : {doctor.email}
+                        phone number : {doctor.phone_no}
+                        registration number : {doctor.reg_no}
+                        category : {doctor.category}
+                        other description : {doctor.description if doctor.description else "Not Provided"}
+                        address: {doctor.address}
+                        """
+                )
             return jsonify({"token": token})
         except IntegrityError as err:
             print(err)
