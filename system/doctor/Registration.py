@@ -12,6 +12,7 @@ from system.AWS_Services.send_email import send_email
 
 class Registration(Resource):
     @verify_register
+    @otp_required
     def post(self, *args, **data):
         data = data.get("update")
         # data consists of many fields which we cant pass in the doctor schema
