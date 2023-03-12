@@ -22,7 +22,7 @@ class Scheduler(Resource):
 
         try:
             doctor = Doctor.query.filter_by(
-                email=email, active=True).first_or_404()
+                email=email).first_or_404()
             # seeing if doctor is active or not. if not active we will not search in active_doctor table
         except:
             return make_response({Config.RESPONSE_KEY: "doctor not found"}, 404)
