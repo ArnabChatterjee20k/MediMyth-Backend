@@ -1,0 +1,17 @@
+version: '3'
+services:
+  medimyth-db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=medimyth
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=arnab
+    ports:
+      - "5432:5432"
+  
+  medimyth-redis:
+    image: redis
+    restart: always
+    ports:
+      - "6379:6379"
