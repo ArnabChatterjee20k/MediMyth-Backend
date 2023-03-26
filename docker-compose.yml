@@ -1,8 +1,38 @@
+version: '3'
+
 services:
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+
   app:
     container_name: medimyth-backend
-    image: medimyth-backend
     build: 
       context: .
     ports:
-      - 5000:5000
+      - "5000:5000"
+    depends_on:
+      - redis
+    restart: always
+    networks:
+      - backend
+
+  celery:
+    build: 
+      context: .
+    command: celery -A celery_worker.celery worker --loglevel=INFO --pool=solo -E --uid=nobody
+    depends_on:
+      - redis
+    restart: always
+    environment:
+      - TZ=Asia/Kolkata # Set your timezone here
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

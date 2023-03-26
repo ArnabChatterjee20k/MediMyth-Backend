@@ -1,9 +1,9 @@
 import os
 from dotenv import load_dotenv , dotenv_values
-load_dotenv()
+load_dotenv(".env")
 class Config:
     SECRET_KEY = "761f9d132273fe311f3e13be9faa56b6"
-    PRODUCTION = False
+    PRODUCTION = os.environ.get("SETUP_ENV") == "PRODUCTION"
     DEBUG = not PRODUCTION
     # SQLALCHEMY_DATABASE_URI = "postgresql://postgres:arnab@localhost/medimyth"
     SQLALCHEMY_DATABASE_URI = os.environ.get("DB_URI")

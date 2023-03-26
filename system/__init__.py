@@ -7,6 +7,7 @@ from flask_cors import CORS
 
 db = SQLAlchemy()
 migrate = Migrate()
+print(__name__)
 celery = Celery(__name__,broker=Config.broker_url, result_backend=Config.result_backend)
 
 def create_api():
