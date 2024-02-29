@@ -4,7 +4,7 @@ from system.utils.JWT import token_required
 from system.Config import Config
 from system.Models.ActiveDoctor import ActiveDoctor
 from system.Models.Doctor import Doctor
-
+from system.ImageUploadServices.ImageUpload import ImageUpload
 from system import db
 from system.AWS_Services.upload_s3 import upload_s3
 
@@ -19,7 +19,8 @@ class UploadPicture(Resource):
         doctor = Doctor.query.join(ActiveDoctor).filter(
             Doctor.email == email).first_or_404()
         doctor_profile_pic_exists = doctor.profile_pic
-        filename = upload_s3(file, name=doctor_profile_pic_exists)
+        filename = ImageUpload.upload_image(file, name=doctor_profile_pic_exists)
+        print(filename , doctor_profile_pic_exists)
         if filename == None:
             return {Config.RESPONSE_KEY: "File Format Not Supported"}, 403
         doctor.profile_pic = filename

@@ -28,6 +28,7 @@ def upload_s3(file, name=None):
 def get_image_name(file,name=None):
     """For generating unique image name"""
     if name != None:
+        print("Exists")
         return name # name will itself contain the extension
     else:
         file_extension = check_and_get_file_extension(file=file)
